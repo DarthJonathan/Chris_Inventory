@@ -7,6 +7,12 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+@import '~mdi/css/materialdesignicons.min.css';
+@import '~pikaday/scss/pikaday.scss';
+@import '~simple-line-icons/css/simple-line-icons.css';
+
+//Vendors
+@import './materialdesign';
 
 .navbar-laravel {
   background-color: #fff;
