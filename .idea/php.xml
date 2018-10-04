@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+<<<<<<< Updated upstream
   <component name="PhpIncludePathManager">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/jakub-onderka/php-console-highlighter" />
@@ -83,4 +84,7 @@
       <PhpUnitSettings load_method="CUSTOM_LOADER" custom_loader_path="$PROJECT_DIR$/vendor/autoload.php" />
     </phpunit_settings>
   </component>
+=======
+  <component name="PhpProjectSharedConfiguration" php_language_level="7.1" />
+>>>>>>> Stashed changes
 </project>
