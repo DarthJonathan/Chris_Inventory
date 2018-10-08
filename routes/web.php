@@ -11,22 +11,19 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'HomeController@index');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-
 Route::prefix('purchases')->group(function() {
-    Route::get('/', 'PurchaseController@overview');
-    Route::get('new', 'PurchaseController@newView');
-    Route::post('new', 'PurcaseController@newSubmit');
-    Route::get('edit', 'PurchaseController@editView');
-    Route::post('edit', 'PurchaseController@handleEditPurchase');
-    Route::post('/')
+    Route::get('/', 'PurchasesController@overview');
+    Route::get('new', 'PurchasesController@newView');
+    Route::post('new', 'PurcasesController@newSubmit');
+    Route::get('edit', 'PurchasesController@editView');
+    Route::post('edit', 'PurchasesController@handleEditPurchase');
+    Route::post('delete', 'PurchasesController@deletePurchase');
 });
 
 Route::prefix('products')->group(function() {
