@@ -15,9 +15,8 @@ class ProductsController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function overview() {
-        $products = Products::paginate(15);
         $data = [
-            'products'  => $products
+            'products'  => Products::paginate(25)
         ];
         return view('products/overview', $data);
     }
