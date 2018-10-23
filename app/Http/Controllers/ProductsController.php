@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Products;
 use App\Purchase;
 use App\Sales;
-use Illuminate\Validation\Validator;
+use Validator;
 use Illuminate\Http\Request;
 
 class ProductsController extends Controller
@@ -57,6 +57,53 @@ class ProductsController extends Controller
     }
 
     /**
+     * Edit item view
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function editItemView($id) {
+        $item = Products::find($id);
+        $data = [
+            'item'  => $item
+        ];
+        return View("products/edit", $data);
+    }
+
+    /**
+     * Handle edit product
+     * @param Request $req
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function editSubmit(Request $req) {
+
+        $rules = [
+            'id'    => 'required',
+            'name'  => 'required',
+            'desc'  => 'required'
+        ];
+
+        $validate = Validator::make($req->all(), $rules);
+
+        if($validate->fails()) {
+            return back()
+                ->withErrors($validate)
+                ->withInput();
+        }
+
+        try {
+            $item = Products::find($req->id);
+
+            $item->product_name = $req->name;
+            $item->description = $req->desc;
+
+            $item->save();
+        }catch(\Exception $e) {
+            return back()->withErrors("Error, (" . $e->getMessage() . ")");
+        }
+        return redirect('/products')->with('success', 'Product changes are saved');
+    }
+
+    /**
      * Delete product
      * @param Request $req
      * @return \Illuminate\Http\RedirectResponse
@@ -78,7 +125,7 @@ class ProductsController extends Controller
 
             return back()->with('success', 'Product Deletion Success!');
         }catch(\Exception $e) {
-            return back()->withErrors($e->getMessage());
+            return back()->withErrors("Error, ( " . $e->getMessage() . " )");
         }
     }
 }

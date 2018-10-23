@@ -2,78 +2,62 @@
 
 @section('content')
 <div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h1>Sales</h1>
+                <a href="{{ url('sales/new') }}" class="btn btn-primary float-right btn-lg">
+                    New Sale
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Sales</h4>
-                <p class="card-description">
-                    Add class
-                    <code>.table-hover</code>
-                </p>
-                <div class="table-responsive">
-                    <table class="table table-hover">
+                <table class="table table-hover table-fit-parent">
                     <thead>
                         <tr>
-                        <th>User</th>
-                        <th>Product</th>
-                        <th>Sale</th>
-                        <th>Status</th>
+                            <th>No.</th>
+                            <th>Invoice No</th>
+                            <th>Product</th>
+                            <th>Sale Date</th>
+                            <th>Price</th>
+                            <th>Discount</th>
+                            <th>Tax Invoice</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                        <td>Jacob</td>
-                        <td>Photoshop</td>
-                        <td class="text-danger"> 28.76%
-                            <i class="mdi mdi-arrow-down"></i>
-                        </td>
-                        <td>
-                            <label class="badge badge-danger">Pending</label>
-                        </td>
-                        </tr>
-                        <tr>
-                        <td>Messsy</td>
-                        <td>Flash</td>
-                        <td class="text-danger"> 21.06%
-                            <i class="mdi mdi-arrow-down"></i>
-                        </td>
-                        <td>
-                            <label class="badge badge-warning">In progress</label>
-                        </td>
-                        </tr>
-                        <tr>
-                        <td>John</td>
-                        <td>Premier</td>
-                        <td class="text-danger"> 35.00%
-                            <i class="mdi mdi-arrow-down"></i>
-                        </td>
-                        <td>
-                            <label class="badge badge-info">Fixed</label>
-                        </td>
-                        </tr>
-                        <tr>
-                        <td>Peter</td>
-                        <td>After effects</td>
-                        <td class="text-success"> 82.00%
-                            <i class="mdi mdi-arrow-up"></i>
-                        </td>
-                        <td>
-                            <label class="badge badge-success">Completed</label>
-                        </td>
-                        </tr>
-                        <tr>
-                        <td>Dave</td>
-                        <td>53275535</td>
-                        <td class="text-success"> 98.05%
-                            <i class="mdi mdi-arrow-up"></i>
-                        </td>
-                        <td>
-                            <label class="badge badge-warning">In progress</label>
-                        </td>
-                        </tr>
+                        @foreach($sales as $count => $sale)
+                            <tr>
+                                <td>{{ $count+1 }}</td>
+                                <td>{{ $sale->invoice_no }}</td>
+                                <td>{{ $sale->product->name }}</td>
+                                <td>{{ \Carbon\Carbon::parse($sale->sales_date)->format("LLLL") }}</td>
+                                <td>Rp. {{ number_format($sale->price) }}</td>
+                                <td>{{ $sale->discount }}</td>
+                                <td>{{ $sale->taxInvoice != null ? $sale->taxInvoice->invoice_no : 'NONE' }}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-block">Edit</button>
+                                    <br>
+                                    <button class="btn btn-danger btn-block">Delete</button>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
-                    </table>
-                </div>
+                    <tfoot>
+                        <tr>
+                            <td colspan="8">
+                                <div class="float-right">
+                                    {{ $sales->links() }}
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </div>
     </div>  

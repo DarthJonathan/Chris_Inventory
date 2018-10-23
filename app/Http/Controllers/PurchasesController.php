@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Inventory;
 use App\Purchase;
 use App\TaxInvoice;
 use Illuminate\Http\Request;
@@ -66,6 +67,11 @@ class PurchasesController extends Controller
 
                 $purchase->tax_invoice_id = $tax_invoice->id;
             }
+
+            //Changes the stock and average price
+            $inventory = Inventory::where('product_id', $req->product_id)->first();
+            $inventory->
+            $inventory->save();
 
             $purchase->save();
             return redirect('/purchases')->with('success', 'Success adding new purchase');

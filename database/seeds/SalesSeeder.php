@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class PurchasesSeeder extends Seeder
+class SalesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,13 +16,13 @@ class PurchasesSeeder extends Seeder
         $limit = 100;
 
         for($i = 0; $i < $limit; $i++) {
-            DB::table('purchases')->insert([ //,
-                'product_id'    => $faker->numberBetween(0, 100),
-                'invoice'       => $faker->bothify("********"),
-                'quantity'      => $faker->randomDigitNotNull,
+            DB::table('sales')->insert([
                 'price'         => $faker->randomNumber(3),
                 'discount'      => $faker->randomNumber(1),
-                'purchase_date' => $faker->dateTimeThisMonth()
+                'sales_date'    => $faker->dateTimeThisMonth(),
+                'product_id'    => $faker->numberBetween(0, 100),
+                'invoice_no'    => $faker->numerify("INV-####-##-####"),
+                'quantity'      => $faker->randomNumber(1)
             ]);
         }
     }

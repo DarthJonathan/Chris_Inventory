@@ -16,9 +16,9 @@ class ProductsSeeder extends Seeder
         $limit = 100;
 
         for($i = 0; $i < $limit; $i++) {
-            DB::table('products')->insert([ //,
-                'name'      => $faker->word,
-                'products'  => $faker->paragraph
+            DB::table('products')->insert([
+                'product_name'  => $faker->word,
+                'description'   => $faker->paragraph
             ]);
         }
     }

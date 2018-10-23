@@ -21,6 +21,7 @@ class CreateSalesTable extends Migration
             $table->float('discount')->nullable();
             $table->string('invoice_no')->nullable();
             $table->dateTime('sales_date')->nullable();
+            $table->integer('quantity')->nullable();
             $table->timestamps();
         });
     }
