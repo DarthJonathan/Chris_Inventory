@@ -70,7 +70,6 @@ class SalesController extends Controller
                 $sale->sales_date = $today;
             }
 
-
             //Check for tax invoice
             if($req->tax_invoice_id != null) {
                 $sale->tax_invoice_id = $req->tax_invoice_id;

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Inventory;
 use App\Purchase;
 use App\TaxInvoice;
+use App\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Validator;
 
@@ -50,8 +51,14 @@ class PurchasesController extends Controller
             if($validation->fails)
                 return back()->withErrors($validation)->withInput();
 
+            $transaction = new Transaction();
+
+            $transaction->type = "Purchase";
+            $transaction->save();
+
             $purchase = new Purchase();
 
+            $purchase->transaction_id = $transaction->id;
             $purchase->product_id = $req->product;
             $purchase->invoice = $req->invoice;
             $purchase->quantity = $req->quantity;
@@ -65,12 +72,21 @@ class PurchasesController extends Controller
                 $tax_invoice->date = $req->taxinvoicedate;
                 $tax_invoice->save();
 
-                $purchase->tax_invoice_id = $tax_invoice->id;
+                $transaction->tax_invoice_id = $tax_invoice->id;
+                $transaction->save();
             }
 
             //Changes the stock and average price
             $inventory = Inventory::where('product_id', $req->product_id)->first();
-            $inventory->
+
+            $old_stock = $inventory->stock;
+            $avg_price = $inventory->average_price;
+
+            $accumulative_price = $old_stock * $avg_price;
+            $accumulative_price += $purchase->price * $purchase->quantity;
+
+            $inventory->stock += $purchase->quantity;
+            $inventory->average_price = $accumulative_price / $inventory->stock;
             $inventory->save();
 
             $purchase->save();
@@ -124,6 +140,17 @@ class PurchasesController extends Controller
             $purchase->price = $req->price;
             $purchase->discount = $req->discount;
             $purchase->purchase_date = $req->date;
+
+            if($req->taxinvoice != null && $req->taxinvoicedate != null) {
+                $tax_invoice = new TaxInvoice();
+                $tax_invoice->invoice_no = $req->taxinvoice;
+                $tax_invoice->date = $req->taxinvoicedate;
+                $tax_invoice->save();
+
+                $transaction = Transaction::find($purchase->transaction_id);
+                $transaction->tax_invoice_id = $tax_invoice->id;
+                $transaction->save();
+            }
 
             $purchase->save();
             return redirect('/purchases')->with('success', 'Success saving changes to purchase');

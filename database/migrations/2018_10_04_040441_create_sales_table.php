@@ -17,7 +17,7 @@ class CreateSalesTable extends Migration
             $table->increments('id');
             $table->float('price')->nullable();
             $table->integer('product_id')->nullable();
-            $table->integer('tax_invoice_id')->nullable();
+            $table->integer('transaction_id')->nullable();
             $table->float('discount')->nullable();
             $table->string('invoice_no')->nullable();
             $table->dateTime('sales_date')->nullable();
