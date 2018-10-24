@@ -17,7 +17,6 @@ class CreatePurchasesTable extends Migration
             $table->increments('id');
             $table->integer('transaction_id')->nullable();
             $table->integer('product_id')->nullable();
-            $table->string('invoice')->nullable();
             $table->integer('quantity')->nullable();
             $table->float('price')->nullable();
             $table->float('discount')->nullable();

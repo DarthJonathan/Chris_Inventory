@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Products;
 use App\Sales;
 use App\TaxInvoice;
+use App\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -58,13 +59,18 @@ class SalesController extends Controller
 
             //Get the previous day invoice
             $last_today = Sales::whereDate('created_at', Carbon::today())->get();
+            $invoice_number = 'INV-' . $today->format('md') . '-' . str_pad($last_today, 3, STR_PAD_LEFT) . '-' . $today->format('y');
+
+            $transaction = new Transaction();
+            $transaction->type = "sales";
+            $transaction->invoice = $invoice_number;
+            $transaction->save();
 
             for($i=0; $i<collect($req->product_id)->count(); $i++){
                 $sale = new Sales();
                 $sale->price = $req->price[$i];
                 $sale->product_id = $req->product_id[$i];
                 $sale->discount = $req->discount[$i];
-                $sale->invoice_no = 'INV-' . $today->format('md') . '-' . str_pad($last_today, 3, STR_PAD_LEFT) . '-' . $today->format('y');
                 if ($req->tax_invoice_id != null)
                     $sale->tax_invoice_id = $req->tax_invoice_id;
                 $sale->sales_date = $today;
