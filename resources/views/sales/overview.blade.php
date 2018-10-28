@@ -17,28 +17,22 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <table class="table table-hover table-fit-parent">
+                <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>No.</th>
                             <th>Invoice No</th>
-                            <th>Product</th>
                             <th>Sale Date</th>
-                            <th>Price</th>
-                            <th>Discount</th>
                             <th>Tax Invoice</th>
-                            <th>Action</th>
+                            <th style="width: 15%">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($sales as $count => $sale)
                             <tr>
                                 <td>{{ $count+1 }}</td>
-                                <td>{{ $sale->invoice_no }}</td>
-                                <td>{{ $sale->product->name }}</td>
-                                <td>{{ \Carbon\Carbon::parse($sale->sales_date)->format("LLLL") }}</td>
-                                <td>Rp. {{ number_format($sale->price) }}</td>
-                                <td>{{ $sale->discount }}</td>
+                                <td>{{ $sale->invoice_id }}</td>
+                                <td>{{ \Carbon\Carbon::parse($sale->created_at)->format("LLLL") }}</td>
                                 <td>{{ $sale->taxInvoice != null ? $sale->taxInvoice->invoice_no : 'NONE' }}</td>
                                 <td>
                                     <button class="btn btn-primary btn-block">Edit</button>

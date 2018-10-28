@@ -17,31 +17,31 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <table class="table table-hover table-fit-parent">
+                <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>No.</th>
                             <th>Invoice No.</th>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Price per Item</th>
-                            <th>Discount</th>
+                            <th>Tax Invoice No.</th>
                             <th>Purchase Date</th>
-                            <th>Action</th>
+                            <th style="width: 15%">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($purchases as $key => $purchase)
                             <tr>
                                 <td>{{ $key+1 }}</td>
-                                <td>{{ $purchase->invoice }}</td>
-                                <td>{{ $purchase->product->product_name }}</td>
-                                <td>{{ $purchase->quantity }}</td>
-                                <td>{{ $purchase->price }}</td>
-                                <td>{{ $purchase->discount }}</td>
-                                <td>{{ $purchase->purchase_date }}</td>
+                                <td>{{ $purchase->invoice_id }}</td>
+                                <td>{{ $purchase->taxInvoice ? $purchase->taxInvoice ->invoice_no : 'No Tax Invoice' }}</td>
+                                <td>{{ \Carbon\Carbon::parse($purchase->created_at)->format("D, d M Y") }}</td>
                                 <td>
+                                    <a href="/purchases/details/{{ $purchase->id }}" class="btn btn-primary">Details</a>
                                     <a href="/purchases/edit/{{ $purchase->id }}" class="btn btn-primary">Edit</a>
+                                    <form action="/purchases/delete" method="post">
+                                        @csrf
+                                        <input type="hidden" name="id" value="{{ $purchase->id }}">
+                                        <button class="btn btn-danger">Delete</button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach

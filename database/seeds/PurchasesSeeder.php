@@ -18,7 +18,7 @@ class PurchasesSeeder extends Seeder
         for($i = 0; $i < $limit; $i++) {
             DB::table('purchases')->insert([ //,
                 'product_id'    => $faker->numberBetween(0, 100),
-                'invoice'       => $faker->bothify("********"),
+                'transaction_id'=> $faker->numberBetween(0, 100),
                 'quantity'      => $faker->randomDigitNotNull,
                 'price'         => $faker->randomNumber(3),
                 'discount'      => $faker->randomNumber(1),

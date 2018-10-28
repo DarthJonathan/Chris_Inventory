@@ -20,7 +20,7 @@ class CreatePurchasesTable extends Migration
             $table->integer('quantity')->nullable();
             $table->float('price')->nullable();
             $table->float('discount')->nullable();
-            $table->date('purchase_date')->nullable();
+            $table->boolean('is_active');
             $table->timestamps();
         });
     }

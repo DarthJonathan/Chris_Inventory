@@ -50,6 +50,8 @@ class ProductsController extends Controller
         $product = new Products();
         $product->product_name = $req->name;
         $product->description = $req->desc;
+        $product->average_price = $req->average_price;
+        $product->stock = $req->stock;
 
         $product->save();
 
@@ -95,6 +97,8 @@ class ProductsController extends Controller
 
             $item->product_name = $req->name;
             $item->description = $req->desc;
+            $item->average_price = $req->average_price;
+            $item->stock = $req->stock;
 
             $item->save();
         }catch(\Exception $e) {

@@ -14,7 +14,7 @@ class Transaction extends Model
         return $this->hasOne('App\TaxInvoice', 'id', 'tax_invoice_id');
     }
 
-    public function purchase() {
+    public function purchases() {
         return $this->hasMany('App\Purchase', 'transaction_id', 'id');
     }
 

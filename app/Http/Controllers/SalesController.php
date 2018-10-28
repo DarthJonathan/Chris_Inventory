@@ -18,7 +18,7 @@ class SalesController extends Controller
      */
     public function list () {
         $data = [
-          'sales'   => Sales::paginate(25)
+          'sales'   => Transaction::where('type', 'sales')->paginate(25)
         ];
         return View("sales.overview", $data);
     }
@@ -74,22 +74,35 @@ class SalesController extends Controller
                 if ($req->tax_invoice_id != null)
                     $sale->tax_invoice_id = $req->tax_invoice_id;
                 $sale->sales_date = $today;
-            }
 
-            //Check for tax invoice
-            if($req->tax_invoice_id != null) {
-                $sale->tax_invoice_id = $req->tax_invoice_id;
-                $sale->save();
-            }else if($req->taxinvoice != null && $req->taxinvoicedate != null) {
-                $tax_invoice = new TaxInvoice();
-                $tax_invoice->invoice_no = $req->taxinvoice;
-                $tax_invoice->date = $req->taxinvoicedate;
-                $tax_invoice->save();
+                //Check for tax invoice
+                if($req->tax_invoice_id != null) {
+                    $sale->tax_invoice_id = $req->tax_invoice_id;
+                    $sale->save();
+                }else if($req->taxinvoice != null && $req->taxinvoicedate != null) {
+                    $tax_invoice = new TaxInvoice();
+                    $tax_invoice->invoice_no = $req->taxinvoice;
+                    $tax_invoice->date = $req->taxinvoicedate;
+                    $tax_invoice->save();
 
-                $sale->tax_invoice_id = $tax_invoice->id;
-                $sale->save();
-            }else {
-                $sale->save();
+                    $sale->tax_invoice_id = $tax_invoice->id;
+                    $sale->save();
+                }else {
+                    $sale->save();
+                }
+
+                //Changes the stock and average price
+                $inventory = Products::find($req->product($i));
+
+                $old_stock = $inventory->stock;
+                $avg_price = $inventory->average_price;
+
+                $accumulative_price = $old_stock * $avg_price;
+                $accumulative_price += $sale->price * $sale->quantity;
+
+                $inventory->stock += $sale->quantity;
+                $inventory->average_price = $accumulative_price / $inventory->stock;
+                $inventory->save();
             }
 
             return redirect('/sales')->with('success', 'Success adding new sale data');

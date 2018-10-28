@@ -18,6 +18,9 @@ class CreateTransactionsTable extends Migration
             $table->string('type');
             $table->string('invoice_id')->nullable();
             $table->integer('tax_invoice_id')->nullable();
+            $table->integer('customer_id')->nullable();
+            $table->dateTime('transaction_date');
+            $table->boolean('is_active');
             $table->timestamps();
         });
     }

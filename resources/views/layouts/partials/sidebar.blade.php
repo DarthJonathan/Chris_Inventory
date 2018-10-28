@@ -28,13 +28,13 @@
         <li class="nav-item">
             <a class="nav-link" href="{{ url('/products') }}">
                 <i class="menu-icon mdi mdi-backup-restore"></i>
-                <span class="menu-title">Products</span>
+                <span class="menu-title">Inventory</span>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ url('/inventory') }}">
+            <a class="nav-link" href="{{ url('/customers') }}">
                 <i class="menu-icon mdi mdi-backup-restore"></i>
-                <span class="menu-title">Inventory</span>
+                <span class="menu-title">Customers</span>
             </a>
         </li>
         <li class="nav-item">

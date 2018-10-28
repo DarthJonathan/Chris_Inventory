@@ -21,7 +21,7 @@ class SalesSeeder extends Seeder
                 'discount'      => $faker->randomNumber(1),
                 'sales_date'    => $faker->dateTimeThisMonth(),
                 'product_id'    => $faker->numberBetween(0, 100),
-                'invoice_no'    => $faker->numerify("INV-####-##-####"),
+                'transaction_id'=> $faker->numberBetween(0, 100),
                 'quantity'      => $faker->randomNumber(1)
             ]);
         }

@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Inventory;
+use App\Products;
 use App\Purchase;
 use App\TaxInvoice;
 use App\Transaction;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Validator;
+use Validator;
 
 class PurchasesController extends Controller
 {
@@ -18,7 +19,10 @@ class PurchasesController extends Controller
      */
     public function overview() {
         $data = [
-            'purchases' => Purchase::paginate(25)
+            'purchases' => Transaction::where([
+                'type'          => 'Purchase',
+                'is_active'     => true
+            ])->paginate(25)
         ];
         return view('/purchase/overview', $data);
     }
@@ -28,7 +32,12 @@ class PurchasesController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function newView() {
-        return view('/purchase/new');
+
+        $data = [
+            'products'  => Products::all()
+        ];
+
+        return view('/purchase/new', $data);
     }
 
     /**
@@ -37,36 +46,55 @@ class PurchasesController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function newSubmit(Request $req) {
-        try {
+//        dd($req->all());
+//        try {
             $rules = [
                 'date'      => 'required',
                 'invoice'   => 'required',
                 'item'      => 'required',
+                'quantity'  => 'required',
                 'price'     => 'required',
                 'discount'  => 'required'
             ];
 
             $validation = Validator::make($req->all(), $rules);
 
-            if($validation->fails)
+            if($validation->fails())
                 return back()->withErrors($validation)->withInput();
 
             $transaction = new Transaction();
 
             $transaction->type = "Purchase";
+            $transaction->invoice_id = $req->invoice;
+            $transaction->transaction_date = $req->date;
             $transaction->save();
 
-            $purchase = new Purchase();
+            for($i=0; $i<collect($req->item)->count(); $i++) {
+                $purchase = new Purchase();
 
-            $purchase->transaction_id = $transaction->id;
-            $purchase->product_id = $req->product;
-            $purchase->invoice = $req->invoice;
-            $purchase->quantity = $req->quantity;
-            $purchase->price = $req->price;
-            $purchase->discount = $req->discount;
-            $purchase->purchase_date = $req->date;
+                $purchase->transaction_id = $transaction->id;
+                $purchase->product_id = $req->item[$i];
+                $purchase->quantity = $req->quantity[$i];
+                $purchase->price = $req->price[$i];
+                $purchase->discount = $req->discount[$i];
 
-            if($req->taxinvoice != null && $req->taxinvoicedate != null) {
+                $purchase->save();
+
+                //Changes the stock and average price
+                $inventory = Products::find($req->item[$i]);
+
+                $old_stock = $inventory->stock;
+                $avg_price = $inventory->average_price;
+
+                $accumulative_price = $old_stock * $avg_price;
+                $accumulative_price += $purchase->price * $purchase->quantity;
+
+                $inventory->stock += $purchase->quantity;
+                $inventory->average_price = $accumulative_price / $inventory->stock;
+                $inventory->save();
+            }
+
+            if ($req->taxinvoice != null && $req->taxinvoicedate != null) {
                 $tax_invoice = new TaxInvoice();
                 $tax_invoice->invoice_no = $req->taxinvoice;
                 $tax_invoice->date = $req->taxinvoicedate;
@@ -75,25 +103,11 @@ class PurchasesController extends Controller
                 $transaction->tax_invoice_id = $tax_invoice->id;
                 $transaction->save();
             }
-
-            //Changes the stock and average price
-            $inventory = Inventory::where('product_id', $req->product_id)->first();
-
-            $old_stock = $inventory->stock;
-            $avg_price = $inventory->average_price;
-
-            $accumulative_price = $old_stock * $avg_price;
-            $accumulative_price += $purchase->price * $purchase->quantity;
-
-            $inventory->stock += $purchase->quantity;
-            $inventory->average_price = $accumulative_price / $inventory->stock;
-            $inventory->save();
-
-            $purchase->save();
             return redirect('/purchases')->with('success', 'Success adding new purchase');
-        }catch(\Exception $e) {
-            return redirect('/purchases')->withErrors($e->getMessage());
-        }
+//        }catch(\Exception $e) {
+//            dd($e->getMessage());
+//            return redirect('/purchases')->withErrors($e->getMessage());
+//        }
     }
 
     /**
@@ -167,11 +181,21 @@ class PurchasesController extends Controller
      */
     public function deletePurchase (Request $req) {
         try {
-            $purchase = Purchase::find($req->id);
-            $purchase->delete();
+            $purchase = Transaction::find($req->id);
+            $purchase->is_active = false;
+            $purchase->save();
             return redirect('/purchases')->with('success', 'Success deleting purchase');
         }catch(\Exception $e) {
             return back()->withErrors("Error deleting purchase (Error" . $e->getMessage() . ")");
         }
+    }
+
+    /**
+     * Get the transaction detail
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function purchaseDetail ($id) {
+        return view('/purchase/details', ['transaction' => Transaction::find($id)]);
     }
 }

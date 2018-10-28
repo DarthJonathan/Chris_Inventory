@@ -3,4 +3,4 @@ require('./bootstrap');
 window.pickaday = require("pikaday");
 
 //React
-// require('./components/Example');
+require('./components/NewPurchaseForm');

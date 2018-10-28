@@ -23,7 +23,10 @@
   },
   "dependencies": {
     "mdi": "^2.2.43",
-    "pikaday": "^1.7.0",
+    "pikaday": "^1.8.0",
+    "react-pikaday": "^0.5.1",
+    "react-select": "^2.1.1",
+    "select2": "^4.0.6-rc.1",
     "simple-line-icons": "^2.4.1"
   }
 }

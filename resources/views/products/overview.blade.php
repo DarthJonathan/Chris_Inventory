@@ -21,13 +21,15 @@
          <div class="col-lg-12 grid-margin stretch-card">
              <div class="card">
                  <div class="card-body">
-                     <table class="table table-hover" style="width: 100%; table-layout: fixed">
+                     <table class="table table-hover">
                          <thead>
                              <tr>
                                  <th style="width: 7%;">No</th>
-                                 <th style="width: 20%;">Product Name</th>
-                                 <th style="width: 50%">Details</th>
-                                 <th>Actions</th>
+                                 <th style="width: 15%;">Product Name</th>
+                                 <th>Details</th>
+                                 <th style="width: 10%">Stock</th>
+                                 <th style="width: 10%">Mean Price</th>
+                                 <th style="width: 15%;">Actions</th>
                              </tr>
                          </thead>
                          <tbody>
@@ -38,10 +40,17 @@
                                     <td style="word-wrap: break-word; white-space: normal;">
                                         {{ $product->description }}
                                     </td>
+                                    <td style="word-wrap: break-word; white-space: normal;">
+                                        {{ $product->stock }}
+                                    </td>
+                                    <td style="word-wrap: break-word; white-space: normal;">
+                                        Rp. {{ $product->average_price }}
+                                    </td>
                                     <td class="d-flex">
                                         <a href="{{ url('/products/edit/' . $product->id) }}" class="btn btn-primary">
                                             <i class="icon-pencil"></i>
                                         </a>
+                                        <br>
                                         <form action="{{ url('/products/delete/') }}" method="post" class="ml-3">
                                             @csrf
                                             <input type="hidden" name="id" value="{{ $product->id }}">
@@ -55,7 +64,7 @@
                          </tbody>
                          <tfoot>
                             <tr>
-                                <td colspan="4">
+                                <td colspan="6">
                                     <div class="float-right">
                                         {{ $products->links() }}
                                     </div>
