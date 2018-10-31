@@ -170,8 +170,44 @@ class PurchasesController extends Controller
             $transaction->transaction_date = $req->date;
             $transaction->save();
 
+            $counter = 0;
+
             foreach($transaction->purchases as $i => $purchase)
             {
+                $counter++;
+                $purchase->product_id = $req->item[$i];
+                $purchase->quantity = $req->quantity[$i];
+                $purchase->price = $req->price[$i];
+                $purchase->discount = $req->discount[$i];
+
+                $purchase->save();
+
+                //Changes the stock and average price
+                $inventory = Products::find($req->item[$i]);
+
+                //Save the inventory to log
+                $log = new InventoryLog();
+
+                $log->product_id = $inventory->id;
+                $log->product_name = $inventory->product_name;
+                $log->description = $inventory->description;
+                $log->average_price = $inventory->average_price;
+                $log->stock = $inventory->stock;
+                $log->save();
+
+                $old_stock = $inventory->stock;
+                $avg_price = $inventory->average_price;
+
+                $accumulative_price = $old_stock * $avg_price;
+                $accumulative_price += $purchase->price * $purchase->quantity;
+
+                $inventory->stock += $purchase->quantity;
+                $inventory->average_price = $accumulative_price / $inventory->stock;
+                $inventory->save();
+            }
+
+            for($i = $counter; $i<collect($req->price)->count(); $i++){
+                $purchase = new Purchase();
                 $purchase->transaction_id = $transaction->id;
                 $purchase->product_id = $req->item[$i];
                 $purchase->quantity = $req->quantity[$i];
