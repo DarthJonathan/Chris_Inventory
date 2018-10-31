@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTransactionsTable extends Migration
+class CreateInventoryLogsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('inventory_logs', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('type');
-            $table->string('invoice_id')->nullable();
-            $table->integer('tax_invoice_id')->nullable();
-            $table->integer('customer_id')->nullable();
-            $table->dateTime('transaction_date');
+            $table->integer('product_id');
+            $table->string('product_name')->nullable();
+            $table->text('description')->nullable();
+            $table->integer('stock')->nullable();
+            $table->float('average_price')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
@@ -32,6 +32,6 @@ class CreateTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('inventory_logs');
     }
 }

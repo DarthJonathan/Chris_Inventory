@@ -43,7 +43,7 @@ export default class NewPurchaseForm extends Component {
 
     renderProducts() {
 
-        const items = <div>
+        const items = (key) =>  <div key={key}>
             <div className="row">
                 <div className="col-lg-12">
                     <hr/>
@@ -85,7 +85,7 @@ export default class NewPurchaseForm extends Component {
         let items_ = [];
 
         for(var i = 0; i<this.state.items; i++){
-            items_.push(items);
+            items_.push(items(i));
         }
 
         return items_;

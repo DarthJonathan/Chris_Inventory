@@ -21,7 +21,7 @@ class CreateSalesTable extends Migration
             $table->float('discount')->nullable();
             $table->dateTime('sales_date')->nullable();
             $table->integer('quantity')->nullable();
-            $table->boolean('is_active');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

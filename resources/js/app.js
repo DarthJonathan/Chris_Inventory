@@ -4,3 +4,4 @@ window.pickaday = require("pikaday");
 
 //React
 require('./components/NewPurchaseForm');
+require('./components/EditPurchaseForm');

@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "mdi": "^2.2.43",
+    "moment": "^2.22.2",
     "pikaday": "^1.8.0",
     "react-pikaday": "^0.5.1",
     "react-select": "^2.1.1",

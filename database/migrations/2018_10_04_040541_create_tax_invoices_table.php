@@ -19,6 +19,7 @@ class CreateTaxInvoicesTable extends Migration
             $table->dateTime('date')->nullable();
             $table->boolean('used')->nullable();
             $table->dateTime('credited')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
