@@ -62,14 +62,35 @@ class Queue {
         }
     }
 
-    public static function putInItems(Products $product, int $quantity) {
+    public static function putInItemsInPurchase(Products $product, Purchase $purchase, int $quantity) {
+        $quantity_delta = $quantity - $purchase->quantity;
+        $purchase->quantity = $quantity;
 
+        if($quantity_delta)
+
+        return $product->save();
+    }
+
+    public static function backtrackQueue(Products $product) {
+        try {
+            //Get the next queue in line
+            $previous_queue = Purchase::where('id', '<', $product->queue_id)
+                ->where('product_id', $product->id)
+                ->first();
+
+            $product->queue_stock = $previous_queue->quantity;
+            $product->queue_id = $previous_queue->id;
+
+            return $product->save();
+        }catch(Exception $e) {
+            throw $e;
+        }
     }
 
     /**
      * Check if queue has passed
-     * @param Model $product
-     * @param Model $transaction
+     * @param Products $product
+     * @param Purchase $transaction
      * @return bool
      */
     public static function queueHasPassed(Products $product, Purchase $transaction) {
