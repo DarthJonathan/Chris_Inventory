@@ -28,7 +28,7 @@
                                  <th style="width: 15%;">Product Name</th>
                                  <th>Details</th>
                                  <th style="width: 10%">Stock</th>
-                                 <th style="width: 10%">Mean Price</th>
+                                 <th style="width: 10%">Queue Price</th>
                                  <th style="width: 15%;">Actions</th>
                              </tr>
                          </thead>
@@ -44,7 +44,7 @@
                                         {{ $product->stock }}
                                     </td>
                                     <td style="word-wrap: break-word; white-space: normal;">
-                                        Rp. {{ $product->average_price }}
+                                        Rp. {{ $product->queue->price }}
                                     </td>
                                     <td class="d-flex">
                                         <a href="{{ url('/products/edit/' . $product->id) }}" class="btn btn-primary">

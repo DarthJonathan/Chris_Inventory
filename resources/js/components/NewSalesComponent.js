@@ -11,6 +11,7 @@ export default class NewSalesComponent extends Component {
 
         this.state = {
             products: [],
+            tax_invoice: [],
             items: 1
         }
     }
@@ -38,7 +39,30 @@ export default class NewSalesComponent extends Component {
             })
             .catch(err => {
                 alert(err);
+            });
+
+        Axios.post('/api/v1/tax_invoices')
+            .then(res => {
+                return res.data;
             })
+            .then(data => {
+                let options = [];
+
+                Promise.all(data.map(item => {
+                    options.push({
+                        label: item.invoice_no,
+                        value: item.id
+                    });
+                }))
+                    .then(() => {
+                        this.setState({
+                            tax_invoice: options
+                        })
+                    })
+            })
+            .catch(err => {
+                alert(err);
+            });
     }
 
     renderProducts() {
@@ -95,33 +119,23 @@ export default class NewSalesComponent extends Component {
         return (
             <div>
                 <div className="form-group row">
-                    <label htmlFor="date" className="col-sm-3 col-form-label">Date*</label>
+                    <label htmlFor="date" className="col-sm-3 col-form-label">Sale Date*</label>
                     <div className="col-sm-9">
                         <input type="date" className="form-control " id="date" name="sales_date" placeholder="Enter date"/>
                     </div>
                 </div>
 
-                <div className="form-group row">
-                    <label htmlFor="price" className="col-sm-3 col-form-label">Item*</label>
-                    <div className="col-sm-9">
-                        <input type="num" step="1" min="1" className="form-control" id="item" name="product_id"
-                               placeholder="Item"/>
-                    </div>
-                </div>
+                {this.renderProducts()}
 
-                <div className="form-group row">
-                    <label htmlFor="price" className="col-sm-3 col-form-label">Price per Item*</label>
-                    <div className="col-sm-9">
-                        <input type="num" step="0.1" min="0" className="form-control" id="price" name="itemprice"
-                               placeholder="Price"/>
-                    </div>
-                </div>
-
-                <div className="form-group row">
-                    <label htmlFor="price" className="col-sm-3 col-form-label">Discount*</label>
-                    <div className="col-sm-9">
-                        <input type="num" step="0.1" min="0" className="form-control" id="discount" name="discount"
-                               placeholder="Discount"/>
+                <div className="row">
+                    <div className="col-lg-12">
+                        <div className="float-right">
+                            <button className="btn btn-primary" type="button" onClick={() => {
+                                this.setState({
+                                    items: this.state.items+1
+                                });
+                            }}>Add New Item</button>
+                        </div>
                     </div>
                 </div>
 
@@ -139,8 +153,7 @@ export default class NewSalesComponent extends Component {
                 <div className="form-group row">
                     <label htmlFor="price" className="col-sm-3 col-form-label">Tax Invoice*</label>
                     <div className="col-sm-9">
-                        <input type="num" step="1" min="1" className="form-control" id="item" name="tax_invoice_id"
-                               placeholder="Item"/>
+                        <Select options={this.state.tax_invoice} name="tax_invoice_id" id="tax_invoice"/>
                     </div>
                 </div>
 

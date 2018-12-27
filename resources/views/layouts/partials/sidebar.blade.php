@@ -20,10 +20,27 @@
         </div>
         </li>
         <li class="nav-item">
-        <a class="nav-link" href="{{ url('/') }}">
-            <i class="menu-icon mdi mdi-television"></i>
-            <span class="menu-title">Dashboard</span>
-        </a>
+            <a class="nav-link" href="{{ url('/') }}">
+                <i class="menu-icon mdi mdi-television"></i>
+                <span class="menu-title">Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                <i class="menu-icon mdi mdi-content-copy"></i>
+                <span class="menu-title">Transaction</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="ui-basic">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/purchases') }}">Purchase</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/sales') }}">Sales</a>
+                    </li>
+                </ul>
+            </div>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{{ url('/products') }}">
@@ -38,33 +55,10 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ url('/purchases') }}">
+            <a class="nav-link" href="{{ url('/taxinvoices') }}">
                 <i class="menu-icon mdi mdi-backup-restore"></i>
-                <span class="menu-title">Purchases</span>
+                <span class="menu-title">Tax Invoices</span>
             </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ url('/sales') }}">
-                <i class="menu-icon mdi mdi-backup-restore"></i>
-                <span class="menu-title">Sales</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-                <i class="menu-icon mdi mdi-content-copy"></i>
-                <span class="menu-title">Basic UI Elements</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="ui-basic">
-                <ul class="nav flex-column sub-menu">
-                <li class="nav-item">
-                    <a class="nav-link" href="pages/ui-features/buttons.html">Buttons</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="pages/ui-features/typography.html">Typography</a>
-                </li>
-                </ul>
-            </div>
         </li>
     </ul>
 </nav>

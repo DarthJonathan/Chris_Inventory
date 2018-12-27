@@ -18,7 +18,8 @@ class CreateProductsTable extends Migration
             $table->string('product_name')->nullable();
             $table->text('description')->nullable();
             $table->integer('stock')->nullable();
-            $table->float('average_price')->nullable();
+            $table->integer('queue_stock')->nullable();
+            $table->integer('queue_id')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

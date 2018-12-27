@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Queue;
 use App\Inventory;
 use App\InventoryLog;
 use App\Products;
@@ -71,6 +72,12 @@ class PurchasesController extends Controller
             $transaction->save();
 
             for($i=0; $i<collect($req->item)->count(); $i++) {
+
+                //If item empty
+                if($req->item[$i] == null) {
+                    continue;
+                }
+
                 $purchase = new Purchase();
 
                 $purchase->transaction_id = $transaction->id;
@@ -87,21 +94,26 @@ class PurchasesController extends Controller
                 //Save the inventory to log
                 $log = new InventoryLog();
 
+                $log->transaction_id = $transaction->id;
                 $log->product_id = $inventory->id;
                 $log->product_name = $inventory->product_name;
                 $log->description = $inventory->description;
-                $log->average_price = $inventory->average_price;
+                $log->queue_id = $inventory->queue_id;
+                $log->stock_in_queue = $inventory->queue_stock;
+                $log->price = $inventory->average_price;
                 $log->stock = $inventory->stock;
                 $log->save();
 
-                $old_stock = $inventory->stock;
-                $avg_price = $inventory->average_price;
+                //Set as the lifo if calculation finished
+                if($inventory->queue_id == null) {
+                    $inventory->queue_id = $purchase->id;
+                    $inventory->queue_stock = $purchase->quantity;
+                    $inventory->average_price = $purchase->price;
+                    $inventory->stock = $purchase->quantity;
+                }else {
+                    $inventory->stock += $purchase->quantity;
+                }
 
-                $accumulative_price = $old_stock * $avg_price;
-                $accumulative_price += $purchase->price * $purchase->quantity;
-
-                $inventory->stock += $purchase->quantity;
-                $inventory->average_price = $accumulative_price / $inventory->stock;
                 $inventory->save();
             }
 
@@ -116,7 +128,6 @@ class PurchasesController extends Controller
             }
             return redirect('/purchases')->with('success', 'Success adding new purchase');
         }catch(\Exception $e) {
-            dd($e->getMessage());
             return redirect('/purchases')->withErrors($e->getMessage());
         }
     }
@@ -174,6 +185,8 @@ class PurchasesController extends Controller
 
             foreach($transaction->purchases as $i => $purchase)
             {
+                $old_quantity = $purchase->quantity;
+
                 $counter++;
                 $purchase->product_id = $req->item[$i];
                 $purchase->quantity = $req->quantity[$i];
@@ -188,25 +201,61 @@ class PurchasesController extends Controller
                 //Save the inventory to log
                 $log = new InventoryLog();
 
+                $log->transaction_id = $transaction->id;
                 $log->product_id = $inventory->id;
                 $log->product_name = $inventory->product_name;
                 $log->description = $inventory->description;
-                $log->average_price = $inventory->average_price;
+                $log->queue_id = $inventory->queue_id;
+                $log->stock_in_queue = $inventory->queue_stock;
+                $log->price = $inventory->average_price;
                 $log->stock = $inventory->stock;
+
                 $log->save();
 
-                $old_stock = $inventory->stock;
-                $avg_price = $inventory->average_price;
+                //Check if queue already reach transaction
+                if($inventory->queue_id == $purchase->id) {
+                    $sold_products = $old_quantity - $inventory->queue_stock;
 
-                $accumulative_price = $old_stock * $avg_price;
-                $accumulative_price += $purchase->price * $purchase->quantity;
+                    //Check if the new quantity is lower triggering inserting a new queue
+                    if($purchase->quantity - $sold_products < 0) {
+                        //Go to next queue
+                        Queue::takeoutItems($inventory, $sold_products - $purchase->quantity);
+                        $inventory->stock += $purchase->quantity - $old_quantity;
+                    }else {
+                        $inventory->stock += $purchase->quantity - $old_quantity;
+                        $inventory->queue_stock += $purchase->quantity - $old_quantity;
+                    }
+                }else if(Queue::queueHasPassed($inventory, $purchase)) {
+                    //Check if the new quantity is lower triggering inserting a new queue
+                    if($purchase->quantity < $old_quantity) {
+                        //check if cascaded changes goes to next queue
+                        if($inventory->queue_stock < $old_quantity - $purchase->quantity) {
+                            //Go to next queue
+                            Queue::takeoutItems($inventory, $old_quantity - $purchase->quantity);
+                            $inventory->stock += $purchase->quantity - $old_quantity;
+                        }else {
+                            //Cascade background
+                            Queue::takeoutItems($inventory, $purchase->quantity - $old_quantity);
+                            $inventory->stock += $purchase->quantity - $old_quantity;
+                        }
+                    }else {
+                        $inventory->stock += $purchase->quantity - $old_quantity;
+                        $inventory->queue_stock += $purchase->quantity - $old_quantity;
+                    }
+                }else {
+                    $inventory->stock += $purchase->quantity - $old_quantity;
+                }
 
-                $inventory->stock += $purchase->quantity;
-                $inventory->average_price = $accumulative_price / $inventory->stock;
                 $inventory->save();
             }
 
             for($i = $counter; $i<collect($req->price)->count(); $i++){
+
+                //If item empty
+                if($req->item[$i] == null) {
+                    continue;
+                }
+
                 $purchase = new Purchase();
                 $purchase->transaction_id = $transaction->id;
                 $purchase->product_id = $req->item[$i];
@@ -222,21 +271,26 @@ class PurchasesController extends Controller
                 //Save the inventory to log
                 $log = new InventoryLog();
 
+                $log->transaction_id = $transaction->id;
                 $log->product_id = $inventory->id;
                 $log->product_name = $inventory->product_name;
                 $log->description = $inventory->description;
+                $log->queue_id = $inventory->queue_id;
+                $log->stock_in_queue = $inventory->queue_stock;
                 $log->average_price = $inventory->average_price;
                 $log->stock = $inventory->stock;
                 $log->save();
 
-                $old_stock = $inventory->stock;
-                $avg_price = $inventory->average_price;
+                //Set as the lifo if calculation finished
+                if($inventory->queue_id == null) {
+                    $inventory->queue_id = $purchase->id;
+                    $inventory->queue_stock = $purchase->quantity;
+                    $inventory->average_price = $purchase->price;
+                    $inventory->stock = $purchase->stock;
+                }else {
+                    $inventory->stock += $purchase->stock;
+                }
 
-                $accumulative_price = $old_stock * $avg_price;
-                $accumulative_price += $purchase->price * $purchase->quantity;
-
-                $inventory->stock += $purchase->quantity;
-                $inventory->average_price = $accumulative_price / $inventory->stock;
                 $inventory->save();
             }
 
@@ -262,7 +316,7 @@ class PurchasesController extends Controller
             $purchase = Transaction::find($req->id);
             $purchase->is_active = false;
             $purchase->save();
-            return redirect('/purchases')->with('success', 'Success deleting purchase');
+            return redirect('/purchases')->with('success', 'Success hiding purchase');
         }catch(\Exception $e) {
             return back()->withErrors("Error deleting purchase (Error" . $e->getMessage() . ")");
         }

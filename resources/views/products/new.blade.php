@@ -15,20 +15,6 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="date" class="col-sm-3 col-form-label">Product Stock</label>
-                            <div class="col-sm-9">
-                                <input type="number" class="form-control" id="name" name="stock" placeholder="Enter Stock">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="date" class="col-sm-3 col-form-label">Product Average Price Now</label>
-                            <div class="col-sm-9">
-                                <input type="number" class="form-control" id="name" name="average_price" placeholder="Enter Mean Price">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
                             <label for="date" class="col-sm-3 col-form-label">Product Desciption</label>
                             <div class="col-sm-9">
                                 <textarea name="desc" id="desc" cols="30" rows="10" class="form-control"></textarea>

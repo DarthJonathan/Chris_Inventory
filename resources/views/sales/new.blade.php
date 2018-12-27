@@ -5,7 +5,7 @@
         <div class="col-md-8 mx-auto">
             <div class="card">
                 <div class="card-body">
-                    <form class="forms-sample" method="post" action="{{ url('/purchases/new') }}">
+                    <form class="forms-sample" method="post" action="{{ url('/sales/new') }}">
 
                         @csrf
 
@@ -13,7 +13,7 @@
 
                         <div class="float-right">
                             <button type="submit" class="btn btn-success mr-2">Submit</button>
-                            <button type="reset" class="btn btn-light">Cancel</button>
+                            <a href="/sales" type="reset" class="btn btn-light">Cancel</a>
                         </div>
                     </form>
                 </div>

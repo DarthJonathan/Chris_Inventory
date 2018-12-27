@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use \Illuminate\Support\Facades\DB;
 
 class CreateConfigurationsTable extends Migration
 {
@@ -20,6 +21,10 @@ class CreateConfigurationsTable extends Migration
             $table->text('value_2')->nullable();
             $table->timestamps();
         });
+
+        DB::table('configurations')->insert([
+            ['key'  => 'vat',   'value_1'   => 0.1]
+        ]);
     }
 
     /**

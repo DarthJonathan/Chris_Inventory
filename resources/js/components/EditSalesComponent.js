@@ -4,19 +4,20 @@ import ReactDOM from 'react-dom';
 import Axios from 'axios';
 import Select from 'react-select';
 
-export default class NewPurchaseForm extends Component {
+class EditSalesComponent extends Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
+            item: window.items,
             products: [],
-            items: 1
+            items: window.items.length,
+            additional: 0
         }
     }
 
     componentDidMount() {
-
         Axios.get('/api/v1/products')
             .then(res => {
                 return res.data;
@@ -41,8 +42,72 @@ export default class NewPurchaseForm extends Component {
             })
     }
 
-    renderProducts() {
+    handleChange(e, key) {
+        let old = this.state.item;
 
+        old[key] = {
+            ...old[key],
+            [e.target.id]: e.target.value
+        };
+
+        console.log(old);
+
+        this.setState({
+            item: old
+        });
+    }
+
+    renderProducts() {
+        const items = (key, item) => <div key={key}>
+            <div className="row">
+                <div className="col-lg-12">
+                    <hr/>
+                </div>
+            </div>
+
+            <div className="form-group row">
+                <label htmlFor="price" className="col-sm-3 col-form-label">Item*</label>
+                <div className="col-sm-9">
+                    <Select options={this.state.products} name="item[]" id="item" value={{label: item.product.product_name, value: item.product_id}}/>
+                </div>
+            </div>
+
+            <div className="form-group row">
+                <label htmlFor="price" className="col-sm-3 col-form-label">Item Quantity*</label>
+                <div className="col-sm-9">
+                    <input type="num" step="1" min="0" onChange={(e) => this.handleChange(e, key)} value={item.quantity} className="form-control" id="quantity" name="quantity[]"
+                           placeholder="Quantity"/>
+                </div>
+            </div>
+
+            <div className="form-group row">
+                <label htmlFor="price" className="col-sm-3 col-form-label">Price per Item*</label>
+                <div className="col-sm-9">
+                    <input type="num" step="0.1" min="0" onChange={(e) =>  this.handleChange(e, key)} value={item.price} className="form-control" id="price" name="price[]"
+                           placeholder="Price"/>
+                </div>
+            </div>
+
+            <div className="form-group row">
+                <label htmlFor="price" className="col-sm-3 col-form-label">Discount*</label>
+                <div className="col-sm-9">
+                    <input type="num" step="0.1" min="0" onChange={(e) =>  this.handleChange(e, key)} value={item.discount} className="form-control" id="discount" name="discount[]"
+                           placeholder="Discount"/>
+                </div>
+            </div>
+        </div>;
+
+        let items_ = [];
+
+        if(this.state.items > 0)
+            this.state.item.map((item, count) => {
+                items_.push(items(count, item))
+            });
+
+        return items_;
+    }
+
+    renderNewProducts() {
         const items = (key) =>  <div key={key}>
             <div className="row">
                 <div className="col-lg-12">
@@ -84,7 +149,7 @@ export default class NewPurchaseForm extends Component {
 
         let items_ = [];
 
-        for(var i = 0; i<this.state.items; i++){
+        for(var i = 0; i<this.state.additional; i++){
             items_.push(items(i));
         }
 
@@ -92,68 +157,29 @@ export default class NewPurchaseForm extends Component {
     }
 
     render() {
+        console.log(this.state);
         return (
             <div>
-                <div className="form-group row">
-                    <label htmlFor="date" className="col-sm-3 col-form-label">Transaction Date*</label>
-                    <div className="col-sm-9">
-                        <input type="date" className="form-control " id="date" name="date" placeholder="Enter date"/>
-                    </div>
-                </div>
-
-                <div className="form-group row">
-                    <label htmlFor="invoicenumber" className="col-sm-3 col-form-label">Invoice Number*</label>
-                    <div className="col-sm-9">
-                        <input type="text" className="form-control" id="invoicenumber" name="invoice"
-                               placeholder="Invoice"/>
-                    </div>
-                </div>
 
                 {this.renderProducts()}
+                {this.renderNewProducts()}
 
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="float-right">
                             <button className="btn btn-primary" type="button" onClick={() => {
                                 this.setState({
-                                    items: this.state.items+1
+                                    additional: this.state.additional+1
                                 });
                             }}>Add New Item</button>
                         </div>
                     </div>
-                </div>
-
-                <div className="row">
-                    <div className="col-lg-12">
-                        <hr/>
-                    </div>
-                </div>
-
-                <div className="form-group row">
-                    <label htmlFor="invoicenumber" className="col-sm-3 col-form-label">Tax Invoice</label>
-                    <div className="col-sm-9">
-                        <input type="text" className="form-control" id="taxinvoice" name="taxinvoice"
-                               placeholder="Tax Invoice"/>
-                    </div>
-                </div>
-
-                <div className="form-group row">
-                    <label htmlFor="taxinvoicedate" className="col-sm-3 col-form-label">Tax Invoice Date</label>
-                    <div className="col-sm-9">
-                        <input type="date" className="form-control" id="date_2" name="taxinvoicedate"
-                               placeholder="Tax Invoice Date"/>
-                    </div>
-                </div>
-
-                <div className="float-right">
-                    <button type="submit" className="btn btn-success mr-2">Submit</button>
-                    <button type="reset" className="btn btn-light">Cancel</button>
                 </div>
             </div>
         );
     }
 }
 
-if (document.getElementById('newPurchaseForm')) {
-    ReactDOM.render(<NewPurchaseForm/>, document.getElementById('newPurchaseForm'));
+if (document.getElementById('editSalesComponent')) {
+    ReactDOM.render(<EditSalesComponent/>, document.getElementById('editSalesComponent'));
 }

@@ -15,11 +15,14 @@ class CreateInventoryLogsTable extends Migration
     {
         Schema::create('inventory_logs', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('transaction_id');
             $table->integer('product_id');
+            $table->integer('queue_id')->nullable();
+            $table->integer('stock_in_queue')->nullable();
             $table->string('product_name')->nullable();
             $table->text('description')->nullable();
             $table->integer('stock')->nullable();
-            $table->float('average_price')->nullable();
+            $table->float('price')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

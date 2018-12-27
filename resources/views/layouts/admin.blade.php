@@ -25,21 +25,6 @@
 {{-- Navbar --}}
 @include('layouts/partials/navbar')
 
-{{--Notifications--}}
-@if(session('success'))
-    <div class="alert alert-success">
-        {{ session('status') }}
-    </div>
-@endif
-
-@if(count($errors->all()) > 0)
-    @foreach($errors->all() as $error)
-        <div class="alert alert-danger">
-            {{ $error }}
-        </div>
-    @endforeach
-@endif
-
 {{--Begin Content--}}
 <div class="container-scroller">
     <div class="container-fluid page-body-wrapper">
@@ -47,6 +32,31 @@
         @include('layouts/partials/sidebar')
         <div class="main-panel">
             <div class="content-wrapper">
+
+
+                {{--Notifications--}}
+                @if(session('success'))
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto">
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                @if(count($errors->all()) > 0)
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto">
+                            @foreach($errors->all() as $error)
+                                <div class="alert alert-danger">
+                                    {{ $error }}
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
                 @yield('content')
             </div>
             {{-- Footer --}}
