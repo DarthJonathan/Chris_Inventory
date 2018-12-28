@@ -86,6 +86,11 @@ class Queue {
         return $product->save();
     }
 
+    /**
+     * Backtrack the queue for the product
+     * @param Products $product
+     * @return bool
+     */
     public static function backtrackQueue(Products $product) {
         try {
             //Get the next queue in line

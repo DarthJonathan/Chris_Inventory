@@ -3,7 +3,7 @@
  @section('content')
      <div class="row">
          <div class="col-md-8">
-             <h1>Products</h1>
+             <h2 class="c-grey-900 mT-10 mB-30">Products</h2>
          </div>
          <div class="col-md-4 text-right">
              <a href="{{ url('products/new') }}" class="btn btn-primary float-right mt-1 mr-3">

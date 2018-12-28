@@ -44,6 +44,7 @@ if (token) {
 window.pickaday = require("pikaday");
 window.sparkline = require('sparkline');
 window.DataTable = require('datatables.net-bs4');
+window.qs = require('qs');
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

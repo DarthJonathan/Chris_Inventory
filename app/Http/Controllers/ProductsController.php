@@ -123,15 +123,23 @@ class ProductsController extends Controller
             $sales = Sales::where('product_id', $id)->get();
 
             if($purchases->count() > 0 || $sales->count() > 0) {
-                return back()->withErrors("Product is used for purchases or sales");
+                return response()->json([
+                    'success'   => false,
+                    'message'   => "Error, there are transactions with this product)"
+                ]);
             }
 
             $product = Products::find($id);
             $product->delete();
-
-            return back()->with('success', 'Product Deletion Success!');
+            return response()->json([
+                'success'   => true,
+                'message'   => "Product deletion success"
+            ]);
         }catch(\Exception $e) {
-            return back()->withErrors("Error, ( " . $e->getMessage() . " )");
+            return response()->json([
+                'success'   => false,
+                'message'   => "Error, ( " . $e->getMessage() . " )"
+            ]);
         }
     }
 }
