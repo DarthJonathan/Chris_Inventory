@@ -17,13 +17,17 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/test', function() {
+    return view('home');
+});
+
 Route::prefix('api/v1')->group(function(){
    Route::get('products', 'ApiController@getProducts');
    Route::post('tax_invoices', 'ApiController@getTaxInvoices');
 });
 
 Route::get('/checknextqueue', function() {
-    \App\Helpers\Queue::takeoutItems(\App\Products::find(1), 50);
+    \App\Helpers\Queue::putInItemsIn(\App\Products::find(1), 50);
     dd(\App\Products::find(1));
 });
 
@@ -39,6 +43,7 @@ Route::prefix('purchases')->group(function() {
 
 Route::prefix('products')->group(function() {
     Route::get('/', 'ProductsController@overview');
+    Route::get('/datatables', 'ProductsController@overviewDatatables');
     Route::get('/new', 'ProductsController@newView');
     Route::post('/new', 'ProductsController@newSubmit');
     Route::get('/edit/{id}', 'ProductsController@editItemView');

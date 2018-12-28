@@ -108,7 +108,6 @@ class PurchasesController extends Controller
                 if($inventory->queue_id == null) {
                     $inventory->queue_id = $purchase->id;
                     $inventory->queue_stock = $purchase->quantity;
-                    $inventory->average_price = $purchase->price;
                     $inventory->stock = $purchase->quantity;
                 }else {
                     $inventory->stock += $purchase->quantity;

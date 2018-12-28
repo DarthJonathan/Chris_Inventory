@@ -1,7 +1,9 @@
 //Dependencies
 require('./bootstrap');
-window.pickaday = require("pikaday");
 
+//Adminator
+require('./scripts');
+require('./AdminScripts');
 //React
 require('./components/NewPurchaseForm');
 require('./components/EditPurchaseForm');

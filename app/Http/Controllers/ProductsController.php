@@ -15,10 +15,15 @@ class ProductsController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function overview() {
-        $data = [
-            'products'  => Products::paginate(25)
-        ];
-        return view('products/overview', $data);
+        return view('products/overview');
+    }
+
+    /**
+     * For datatables data
+     * @return \Yajra\DataTables\DataTableAbstract|\Yajra\DataTables\DataTables
+     */
+    public function overviewDatatables() {
+        return datatables(Products::with('queue')->get())->toJson();
     }
 
     /**
@@ -50,7 +55,6 @@ class ProductsController extends Controller
         $product = new Products();
         $product->product_name = $req->name;
         $product->description = $req->desc;
-        $product->average_price = 0;
         $product->stock = 0;
 
         $product->save();

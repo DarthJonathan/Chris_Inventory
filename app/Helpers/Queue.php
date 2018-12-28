@@ -29,7 +29,6 @@ class Queue {
 
             //Call recurisve if still here;
             if($product->queue_stock - $delta_quantity < 0) {
-
                 Queue::takeoutItems($product, $delta_quantity);
             }else {
                 $product->queue_stock -= $delta_quantity;
@@ -62,11 +61,27 @@ class Queue {
         }
     }
 
-    public static function putInItemsInPurchase(Products $product, Purchase $purchase, int $quantity) {
-        $quantity_delta = $quantity - $purchase->quantity;
-        $purchase->quantity = $quantity;
+    /**
+     * @param Products $product
+     * @param int $quantity
+     * @return bool
+     */
+    public static function putInItemsIn(Products $product, int $quantity) {
+        $stock_usage = $product->queue->quantity - $product->queue_stock;
+        $surplus_quantity = $quantity + $product->queue_stock - $product->queue->quantity;
 
-        if($quantity_delta)
+        if($quantity + $product->queue_stock > $product->queue->quantity) {
+            Queue::backtrackQueue($product);
+
+            //Call recursive if it's still larger
+            if($surplus_quantity > $product->queue->quantity){
+                Queue::putInItemsIn($product, $surplus_quantity);
+            }else {
+                $product->queue_stock += $surplus_quantity;
+            }
+        }else {
+            $product->queue_stock += $quantity;
+        }
 
         return $product->save();
     }
@@ -76,9 +91,10 @@ class Queue {
             //Get the next queue in line
             $previous_queue = Purchase::where('id', '<', $product->queue_id)
                 ->where('product_id', $product->id)
+                ->orderBy('id', 'desc')
                 ->first();
 
-            $product->queue_stock = $previous_queue->quantity;
+            $product->queue_stock = 0;
             $product->queue_id = $previous_queue->id;
 
             return $product->save();

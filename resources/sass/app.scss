@@ -12,7 +12,16 @@
 @import '~simple-line-icons/css/simple-line-icons.css';
 
 //Vendors
-@import './materialdesign';
+@import 'spec/settings/index';
+@import 'spec/tools/index';
+@import 'spec/index';
+@import 'jquery.datatables';
+@import '~datatables.net-bs4/css/dataTables.bootstrap4.min.css';
+@import '~perfect-scrollbar/css/perfect-scrollbar';
+@import './teamify-icons';
+@import '~font-awesome/css/font-awesome.min.css';
+@import '~fullcalendar/dist/fullcalendar.min.css';
+
 
 //Personal
 @import './style';

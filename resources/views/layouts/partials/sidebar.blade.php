@@ -1,64 +1,69 @@
-<nav class="sidebar sidebar-offcanvas" id="sidebar">
-    <ul class="nav">
-        <li class="nav-item nav-profile">
-        <div class="nav-link">
-            <div class="user-wrapper">
-            <div class="profile-image">
-                <img src="{{ asset('images/faces/face1.jpg') }}" alt="profile image">
-            </div>
-            <div class="text-wrapper">
-                <p class="profile-name">Richard V.Welsh</p>
-                <div>
-                <small class="designation text-muted">Manager</small>
-                <span class="status-indicator online"></span>
+<div class="sidebar">
+    <div class="sidebar-inner">
+        <!-- ### $Sidebar Header ### -->
+        <div class="sidebar-logo">
+            <div class="peers ai-c fxw-nw">
+                <div class="peer peer-greed">
+                    <a class="sidebar-link td-n" href="index.html">
+                        <div class="peers ai-c fxw-nw">
+                            <div class="peer">
+                                <div class="logo">
+                                    <img src="{{ asset('images/logo.png') }}" alt="">
+                                </div>
+                            </div>
+                            <div class="peer peer-greed">
+                                <h5 class="lh-1 mB-0 logo-text">Inventory Management</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="peer">
+                    <div class="mobile-toggle sidebar-toggle">
+                        <a href="" class="td-n">
+                            <i class="ti-arrow-circle-left"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
-            </div>
-            <a href="{{ url('/purchases/new') }}" class="btn btn-success btn-block">New Purchase
-            <i class="mdi mdi-plus"></i>
-            </a>
         </div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ url('/') }}">
-                <i class="menu-icon mdi mdi-television"></i>
-                <span class="menu-title">Dashboard</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-                <i class="menu-icon mdi mdi-content-copy"></i>
-                <span class="menu-title">Transaction</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="ui-basic">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/purchases') }}">Purchase</a>
+
+        <!-- ### $Sidebar Menu ### -->
+        <ul class="sidebar-menu scrollable pos-r">
+            <li class="nav-item mT-30 active">
+                <a class="sidebar-link" href="/">
+                <span class="icon-holder">
+                  <i class="c-blue-500 ti-home"></i>
+                </span>
+                    <span class="title">Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="dropdown-toggle" href="javascript:void(0);">
+                    <span class="icon-holder">
+                      <i class="c-orange-500 ti-layout-list-thumb"></i>
+                    </span>
+                        <span class="title">Transactions</span>
+                        <span class="arrow">
+                        <i class="ti-angle-right"></i>
+                    </span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class='sidebar-link' href="/purchases">Purchases</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/sales') }}">Sales</a>
+                    <li>
+                        <a class='sidebar-link' href="/sales">Sales</a>
                     </li>
                 </ul>
-            </div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ url('/products') }}">
-                <i class="menu-icon mdi mdi-backup-restore"></i>
-                <span class="menu-title">Inventory</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ url('/customers') }}">
-                <i class="menu-icon mdi mdi-backup-restore"></i>
-                <span class="menu-title">Customers</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ url('/taxinvoices') }}">
-                <i class="menu-icon mdi mdi-backup-restore"></i>
-                <span class="menu-title">Tax Invoices</span>
-            </a>
-        </li>
-    </ul>
-</nav>
+            </li>
+            <li class="nav-item active">
+                <a class="sidebar-link" href="/products">
+                <span class="icon-holder">
+                  <i class="c-blue-500 ti-home"></i>
+                </span>
+                    <span class="title">Inventory</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

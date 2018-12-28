@@ -22,12 +22,35 @@
     "react-dom": "^16.2.0"
   },
   "dependencies": {
+    "datatables.net": "^1.10.19",
+    "datatables.net-bs4": "^1.10.19",
+    "datepicker": "0.0.0",
+    "font-awesome": "^4.7.0",
+    "fullcalendar": "^3.9.0",
     "mdi": "^2.2.43",
     "moment": "^2.22.2",
+    "perfect-scrollbar": "^1.4.0",
     "pikaday": "^1.8.0",
     "react-pikaday": "^0.5.1",
     "react-select": "^2.1.1",
     "select2": "^4.0.6-rc.1",
-    "simple-line-icons": "^2.4.1"
+    "simple-line-icons": "^2.4.1",
+    "sparkline": "^0.2.0",
+    "themify-icons": "^1.0.0",
+    "babel-polyfill": "^6.26.0",
+    "bootstrap": "^4.0.0",
+    "bootstrap-datepicker": "^1.7.1",
+    "chart.js": "^2.7.1",
+    "datatables": "^1.10.13",
+    "easy-pie-chart": "^2.1.7",
+    "file-loader": "^1.1.5",
+    "jquery": "^3.2.1",
+    "jquery-sparkline": "^2.4.0",
+    "jvectormap": "^2.0.4",
+    "load-google-maps-api": "^1.0.0",
+    "lodash": "^4.17.4",
+    "masonry-layout": "^4.2.0",
+    "popper.js": "^1.12.6",
+    "skycons": "^1.0.0"
   }
 }

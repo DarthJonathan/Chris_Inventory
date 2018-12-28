@@ -39,6 +39,13 @@ if (token) {
 }
 
 /**
+ * Vendors
+ */
+window.pickaday = require("pikaday");
+window.sparkline = require('sparkline');
+window.DataTable = require('datatables.net-bs4');
+
+/**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
  * allows your team to easily build robust real-time web applications.
