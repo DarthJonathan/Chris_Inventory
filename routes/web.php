@@ -33,6 +33,7 @@ Route::get('/checknextqueue', function() {
 
 Route::prefix('purchases')->group(function() {
     Route::get('/', 'PurchasesController@overview');
+    Route::get('/datatables', 'PurchasesController@overviewDatatables');
     Route::get('new', 'PurchasesController@newView');
     Route::post('new', 'PurchasesController@newSubmit');
     Route::get('details/{id}', 'PurchasesController@purchaseDetail');

@@ -30,6 +30,16 @@ class PurchasesController extends Controller
         return view('/purchase/overview', $data);
     }
 
+    public function overviewDatatables() {
+        return datatables(Transaction::where([
+            'type'          => 'Purchase',
+            'is_active'     => true
+        ])
+            ->with('purchases')
+            ->get()
+        )->toJson();
+    }
+
     /**
      * New purchase view
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View

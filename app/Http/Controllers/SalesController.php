@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Queue;
 use App\InventoryLog;
 use App\Products;
 use App\Purchase;
@@ -102,7 +103,7 @@ class SalesController extends Controller
 
                 //Changes the stock and average price
                 $inventory = Products::find($req->item[$i]);
-
+                Queue::takeoutItems($inventory, $sale->quantity);
                 $inventory->save();
             }
 
