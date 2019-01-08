@@ -100,7 +100,7 @@ $(document).ready(function() {
                 })
                 .then(res => {
                     if(res.success === true) {
-                        productsTable.ajax.reload();
+                        purchasesTable.ajax.reload();
                     }else {
 
                     }
@@ -140,25 +140,25 @@ $(document).ready(function() {
                 }
             },
         ],
-        "ajax": "/purchases/datatables"
+        "ajax": "/sales/datatables"
     });
 
-    $('#purchasesTable tbody').on('click', 'button', function() {
-        var data = purchasesTable.row( $(this).parents('tr') ).data();
+    $('#salesTable tbody').on('click', 'button', function() {
+        var data = salesTable.row( $(this).parents('tr') ).data();
         var type = $(this).data('type');
 
         if(type === "edit") {
-            window.location.href = '/purchases/edit/' + data.id;
+            window.location.href = '/sales/edit/' + data.id;
         }else if(type === "details"){
-            window.location.href = '/purchases/details/' + data.id;
+            window.location.href = '/sales/details/' + data.id;
         }else{
-            axios.post('/purchases/delete', qs.stringify({id : data.id}))
+            axios.post('/sales/delete', qs.stringify({id : data.id}))
                 .then(res => {
                     return res.data;
                 })
                 .then(res => {
                     if(res.success === true) {
-                        productsTable.ajax.reload();
+                        salesTable.ajax.reload();
                     }else {
 
                     }
@@ -166,5 +166,4 @@ $(document).ready(function() {
                 });
         }
     });
-
 });
