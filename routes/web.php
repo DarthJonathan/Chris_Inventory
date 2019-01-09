@@ -54,9 +54,10 @@ Route::prefix('products')->group(function() {
 
 Route::prefix('sales')->group(function(){
     Route::get('/', 'SalesController@list');
+    Route::get('/datatables', 'SalesController@overviewDatatables');
     Route::get('/new', 'SalesController@newView');
     Route::post('/new', 'SalesController@handleNew');
-    Route::get('/detail/{id}', 'SalesController@detail');
+    Route::get('/details/{id}', 'SalesController@detail');
     Route::get('/edit/{id}', 'SalesController@editView');
     Route::post('/edit', 'SalesController@handleEdit');
 });

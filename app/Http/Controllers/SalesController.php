@@ -28,6 +28,20 @@ class SalesController extends Controller
     }
 
     /**
+     * Datatables
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function overviewDatatables() {
+        return datatables(Transaction::where([
+            'type'          => 'Sales',
+            'is_active'     => true
+        ])
+            ->with('sales')
+            ->get()
+        )->toJson();
+    }
+
+    /**
      * New sale view
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -104,6 +118,7 @@ class SalesController extends Controller
                 //Changes the stock and average price
                 $inventory = Products::find($req->item[$i]);
                 Queue::takeoutItems($inventory, $sale->quantity);
+                $inventory->stock -= $sale->quantity;
                 $inventory->save();
             }
 

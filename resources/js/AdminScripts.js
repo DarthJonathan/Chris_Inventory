@@ -115,6 +115,7 @@ $(document).ready(function() {
         "serverSide": true,
         "columns": [
             {'data': 'invoice_id'},
+            {'data': 'transaction_date'},
             {
                 'data': 'tax_invoice_id',
                 render: function(data,type,row) {
@@ -124,9 +125,8 @@ $(document).ready(function() {
                         return data;
                 }
             },
-            {'data': 'transaction_date'},
             {
-                'data': null,
+                'data': 'sales.id',
                 render : function(data, type, row) {
                     return '<button class="btn btn-primary mr-2 edit-product" data-type="details">' +
                             'Details' +

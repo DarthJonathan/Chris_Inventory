@@ -15,10 +15,9 @@
     <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <table class="table table-hover">
+                <table class="table table-hover" id="salesTable">
                     <thead>
                         <tr>
-                            <th>No.</th>
                             <th>Invoice No</th>
                             <th>Sale Date</th>
                             <th>Tax Invoice</th>
@@ -42,7 +41,6 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>No.</th>
                             <th>Invoice No</th>
                             <th>Sale Date</th>
                             <th>Tax Invoice</th>

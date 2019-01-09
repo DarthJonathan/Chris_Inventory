@@ -30,6 +30,10 @@ class PurchasesController extends Controller
         return view('/purchase/overview', $data);
     }
 
+    /**
+     * Datatables
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function overviewDatatables() {
         return datatables(Transaction::where([
             'type'          => 'Purchase',
