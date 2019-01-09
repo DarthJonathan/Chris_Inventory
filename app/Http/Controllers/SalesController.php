@@ -118,12 +118,12 @@ class SalesController extends Controller
                 //Changes the stock and average price
                 $inventory = Products::find($req->item[$i]);
                 Queue::takeoutItems($inventory, $sale->quantity);
-                $inventory->stock -= $sale->quantity;
                 $inventory->save();
             }
 
             return redirect('/sales')->with('success', 'Success adding new sale data');
         }catch(\Exception $e) {
+            dd($e->getMessage());
             return back()->withErrors("Error creating new record (Error : " . $e->getMessage() . " )");
         }
     }

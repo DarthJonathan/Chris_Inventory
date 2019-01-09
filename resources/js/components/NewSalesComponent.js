@@ -147,7 +147,9 @@ export default class NewSalesComponent extends Component {
 
 
                 <div className="form-group row">
-                    <h4>Existing Tax Invoice</h4>
+                    <div className="col-12">
+                        <h4>Existing Tax Invoice</h4>
+                    </div>
                 </div>
 
                 <div className="form-group row">
@@ -158,7 +160,9 @@ export default class NewSalesComponent extends Component {
                 </div>
 
                 <div className="form-group row">
-                    <h4>New Tax Invoice</h4>
+                    <div className="col-lg-12">
+                        <h4>New Tax Invoice</h4>
+                    </div>
                 </div>
 
                 <div className="form-group row">
