@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Customers;
 use App\Transaction;
 use Illuminate\Http\Request;
+use Validator;
 
 class CustomerController extends Controller
 {

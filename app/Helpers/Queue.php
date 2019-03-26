@@ -23,10 +23,11 @@ class Queue {
      */
     public static function takeoutItems(Products $product, int $quantity) {
         $delta_quantity = $quantity - $product->queue_stock;
+        $stock_retain = $product->stock;
         $product->stock -= $quantity;
 
         if($delta_quantity > 0) {
-            if($quantity - $product->stock < 0) {
+            if($quantity - $stock_retain < 0) {
                 Queue::proceedQueue($product);
 
                 //Call recurisve if still here;
@@ -35,7 +36,7 @@ class Queue {
                 } else {
                     $product->queue_stock -= $delta_quantity;
                 }
-            }else {
+            }else{
                 $product->queue_stock -= $quantity;
             }
         }else{
