@@ -43,11 +43,10 @@ class Queue {
      */
     private static function decreaseItems(Products $product, int $quantity) {
         $delta_quantity = $quantity - $product->queue_stock;
-        Queue::proceedQueue($product);
 
-        //Call recurisve if still here;
         if ($delta_quantity > 0) {
-            Queue::decreaseItems($product, $quantity);
+            Queue::proceedQueue($product);
+            Queue::decreaseItems($product, $delta_quantity);
         } else {
             $product->queue_stock -= $quantity;
         }
