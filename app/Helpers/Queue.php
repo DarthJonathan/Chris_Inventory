@@ -22,24 +22,33 @@ class Queue {
      * @return bool
      */
     public static function takeoutItems(Products $product, int $quantity) {
-        $delta_quantity = $quantity - $product->queue_stock;
         $stock_retain = $product->stock;
         $product->stock -= $quantity;
 
-        if($delta_quantity > 0) {
-            if($quantity - $stock_retain < 0) {
-                Queue::proceedQueue($product);
-
-                //Call recurisve if still here;
-                if ($product->queue_stock - $delta_quantity < 0) {
-                    Queue::takeoutItems($product, $delta_quantity);
-                } else {
-                    $product->queue_stock -= $delta_quantity;
-                }
-            }else{
-                $product->queue_stock -= $quantity;
-            }
+        if($stock_retain - $quantity > 0) {
+            self::decreaseItems($product, $quantity);
         }else{
+            $product->queue_stock -= $quantity;
+        }
+
+        return $product->save();
+    }
+
+    /**
+     * Decrease from queue that involved next queue
+     *
+     * @param Products $product
+     * @param int $quantity
+     * @return bool
+     */
+    private static function decreaseItems(Products $product, int $quantity) {
+        $delta_quantity = $quantity - $product->queue_stock;
+        Queue::proceedQueue($product);
+
+        //Call recurisve if still here;
+        if ($delta_quantity > 0) {
+            Queue::decreaseItems($product, $quantity);
+        } else {
             $product->queue_stock -= $quantity;
         }
 
@@ -63,6 +72,7 @@ class Queue {
 
             return $product->save();
         }catch(Exception $e) {
+            dd($e->getMessage());
             throw $e;
         }
     }
