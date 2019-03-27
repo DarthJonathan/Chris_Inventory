@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\TaxInvoice;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TaxInvoiceController extends Controller
@@ -13,10 +14,16 @@ class TaxInvoiceController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function overview() {
-        $data = [
-            'taxinvoices'  => TaxInvoice::paginate(25)
-        ];
-        return view('taxinvoices.overview', $data);
+        return view('taxinvoices.overview');
+    }
+
+    /**
+     * Get all tax invoices for datatables ajax
+     *
+     * @return \Yajra\DataTables\DataTableAbstract|\Yajra\DataTables\DataTables
+     */
+    public function overviewDatatables() {
+        return datatables(TaxInvoice::all())->toJson();
     }
 
     /**
@@ -139,5 +146,25 @@ class TaxInvoiceController extends Controller
         }catch(\Exception $e) {
             return back()->withErrors("Error, ( " . $e->getMessage() . " )");
         }
+    }
+
+    /**
+     * Yearly tax invoice view
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function yearlyTaxInvoice () {
+        return view('taxinvoices.overview');
+    }
+
+    /**
+     * Get current year tax invoice
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function yearlyTaxInvoiceDatatables() {
+        $now = new Carbon();
+        return datatables(TaxInvoice::whereYear('created_at', $now->year)->get())->toJson();
     }
 }

@@ -21,7 +21,7 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <table class="table table-hover" style="width: 100%; table-layout: fixed">
+                    <table id="taxInvoiceTable" class="table table-hover" style="width: 100%; table-layout: fixed">
                         <thead>
                         <tr>
                             <th style="width: 7%;">No</th>
@@ -32,27 +32,27 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($taxinvoices as $index => $taxinvoice)
-                            <tr>
-                                <td>{{ $index+1 }}</td>
-                                <td>{{ $taxinvoice->invoice_no }}</td>
-                                <td>{{ $taxinvoice->date }}</td>
-                                <td>{{ $taxinvoice->used }}</td>
-                                <td>
-                                    <button class="btn btn-primary">
-                                        Edit
-                                    </button>
-                                </td>
-                            </tr>
-                        @endforeach
+                        {{--@foreach($taxinvoices as $index => $taxinvoice)--}}
+                            {{--<tr>--}}
+                                {{--<td>{{ $index+1 }}</td>--}}
+                                {{--<td>{{ $taxinvoice->invoice_no }}</td>--}}
+                                {{--<td>{{ $taxinvoice->date }}</td>--}}
+                                {{--<td>{{ $taxinvoice->used }}</td>--}}
+                                {{--<td>--}}
+                                    {{--<button class="btn btn-primary">--}}
+                                        {{--Edit--}}
+                                    {{--</button>--}}
+                                {{--</td>--}}
+                            {{--</tr>--}}
+                        {{--@endforeach--}}
                         </tbody>
                         <tfoot>
                         <tr>
-                            <td colspan="4">
-                                <div class="float-right">
-                                    {{ $taxinvoices->links() }}
-                                </div>
-                            </td>
+                            <th style="width: 7%;">No</th>
+                            <th style="width: 20%;">Invoice No</th>
+                            <th>Date</th>
+                            <th>Cashed</th>
+                            <th>Actions</th>
                         </tr>
                         </tfoot>
                     </table>

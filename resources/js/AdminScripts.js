@@ -143,6 +143,16 @@ $(document).ready(function() {
         "ajax": "/sales/datatables"
     });
 
+    // Tax Invoices Table
+    var taxInvoiceTable = $('#taxInvoiceTable').DataTable( {
+        "processing": true,
+        "serverSide": true,
+        "columns": [
+
+        ],
+        "ajax": "/taxinvoices/datatables"
+    });
+
     $('#salesTable tbody').on('click', 'button', function() {
         var data = salesTable.row( $(this).parents('tr') ).data();
         var type = $(this).data('type');

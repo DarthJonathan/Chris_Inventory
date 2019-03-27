@@ -26,11 +26,6 @@ Route::prefix('api/v1')->group(function(){
    Route::post('tax_invoices', 'ApiController@getTaxInvoices');
 });
 
-Route::get('/checknextqueue', function() {
-    \App\Helpers\Queue::putInItemsIn(\App\Products::find(1), 50);
-    dd(\App\Products::find(1));
-});
-
 Route::prefix('purchases')->group(function() {
     Route::get('/', 'PurchasesController@overview');
     Route::get('/datatables', 'PurchasesController@overviewDatatables');
@@ -73,9 +68,12 @@ Route::prefix('customers')->group(function() {
 
 Route::prefix('taxinvoices')->group(function() {
     Route::get('/', 'TaxInvoiceController@overview');
+    Route::get('/datatables', 'TaxInvoiceController@overviewDatatables');
     Route::get('/new', 'TaxInvoiceController@newView');
     Route::post('/new', 'TaxInvoiceController@handleNew');
     Route::get('/edit/{id}', 'TaxInvoiceController@editItemView');
     Route::post('/edit', 'TaxInvoiceController@editSubmit');
     Route::post('/delete', 'TaxInvoiceController@deleteItem');
+
+    Route::get('/year', 'TaxInvoiceController@yearlyTaxInvoice');
 });

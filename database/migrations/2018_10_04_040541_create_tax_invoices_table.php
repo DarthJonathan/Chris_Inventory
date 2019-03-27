@@ -16,6 +16,7 @@ class CreateTaxInvoicesTable extends Migration
         Schema::create('tax_invoices', function (Blueprint $table) {
             $table->increments('id');
             $table->string('invoice_no')->nullable();
+            $table->integer('customer_id')->nullable();
             $table->dateTime('date')->nullable();
             $table->boolean('used')->nullable();
             $table->dateTime('credited')->nullable();

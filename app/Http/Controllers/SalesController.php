@@ -252,13 +252,6 @@ class SalesController extends Controller
                 $inventory->average_price = $accumulative_price / $inventory->stock;
                 $inventory->save();
             }
-
-            if ($req->taxinvoice != null && $req->taxinvoicedate != null) {
-                $tax_invoice = TaxInvoice::find($transaction->tax_invoice_id);
-                $tax_invoice->invoice_no = $req->taxinvoice;
-                $tax_invoice->date = $req->taxinvoicedate;
-                $tax_invoice->save();
-            }
             return redirect('/purchases')->with('success', 'Success saving changes to purchase');
         }catch(\Exception $e) {
             return back()->withErrors("Error  changes (Error" . $e->getMessage() . ")");
