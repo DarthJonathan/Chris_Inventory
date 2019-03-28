@@ -89,6 +89,27 @@
 
             <!-- ### $App Screen Content ### -->
             <main class='main-content bgc-grey-100'>
+                {{--### Notifications ###--}}
+                @if($errors->all())
+                    @foreach($errors->all() as $error)
+                        <div class="alert alert-danger" role="alert">
+                            {!! $error !!}
+                        </div>
+                    @endforeach
+                @endif
+                @if(!empty($success))
+                    @foreach($success->all() as $succ)
+                        <div class="alert alert-primary" role="alert">
+                            {!! $succ !!}
+                        </div>
+                    @endforeach
+                @endif
+                @if(Session::has('success'))
+                    <div class="alert alert-primary" role="alert">
+                        {!! Session::get('success') !!}
+                    </div>
+                @endif
+
                 <div id='mainContent'>
                     @yield('content')
                 </div>

@@ -69,6 +69,9 @@ Route::prefix('customers')->group(function() {
 Route::prefix('taxinvoices')->group(function() {
     Route::get('/', 'TaxInvoiceController@overview');
     Route::get('/datatables', 'TaxInvoiceController@overviewDatatables');
+
+    Route::get('/details', 'TaxInvoiceController@details');
+
     Route::get('/new', 'TaxInvoiceController@newView');
     Route::post('/new', 'TaxInvoiceController@handleNew');
     Route::get('/edit/{id}', 'TaxInvoiceController@editItemView');

@@ -167,4 +167,17 @@ class TaxInvoiceController extends Controller
         $now = new Carbon();
         return datatables(TaxInvoice::whereYear('created_at', $now->year)->get())->toJson();
     }
+
+    /**
+     * Detail of a tax invoice
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function details($id) {
+        $data = [
+            'tax_invoice'  => TaxInvoice::find($id)
+        ];
+        return view('TaxInvoices.details', $data);
+    }
 }

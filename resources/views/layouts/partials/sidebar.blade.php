@@ -105,6 +105,14 @@
                     <span class="title">Inventory</span>
                 </a>
             </li>
+            <li class="nav-item active">
+                <a class="sidebar-link" href="/customers">
+                <span class="icon-holder">
+                  <i class="c-blue-500 ti-home"></i>
+                </span>
+                    <span class="title">Customers</span>
+                </a>
+            </li>
         </ul>
     </div>
 </div>

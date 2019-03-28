@@ -1,3 +1,5 @@
+var taxInvoiceTable;
+
 $(document).ready(function() {
     //Product page
     var productsTable = $('#productsOverview').DataTable( {
@@ -143,16 +145,6 @@ $(document).ready(function() {
         "ajax": "/sales/datatables"
     });
 
-    // Tax Invoices Table
-    var taxInvoiceTable = $('#taxInvoiceTable').DataTable( {
-        "processing": true,
-        "serverSide": true,
-        "columns": [
-
-        ],
-        "ajax": "/taxinvoices/datatables"
-    });
-
     $('#salesTable tbody').on('click', 'button', function() {
         var data = salesTable.row( $(this).parents('tr') ).data();
         var type = $(this).data('type');
@@ -176,4 +168,61 @@ $(document).ready(function() {
                 });
         }
     });
+
+    // Tax Invoices Table
+    taxInvoiceTable = $('#taxInvoiceTable').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "columns": [
+            {'data' : 'invoice_no'},
+            {
+                'data' : 'date',
+                render: (data) => {
+                    return '<span>' + data + '</span>';
+                }
+            },
+            {
+                data: 'used',
+                render: (data) => {
+                    if(data) {
+                        return '<span>Used</span>';
+                    }else {
+                        return '<span>Not Used</span>';
+                    }
+                }
+            },
+            {
+                data: 'id',
+                render: (data) => {
+                    return '<a href="/taxinvoices/details/' + data + '" class="btn btn-primary mr-2 edit-product">' +
+                            'Details' +
+                        '</a>' +
+                        '<a href="/taxinvoices/edit/' + data + '" class="btn btn-primary mr-2 edit-product">' +
+                            '<i class="icon-pencil"></i>' +
+                        '</a>' +
+                        '<button onclick="deleteTaxInvoice(' + data + ')" class="btn btn-danger delete-product">' +
+                            '<i class="icon-trash"></i>' +
+                        '</button>'
+                }
+            }
+        ],
+        "ajax": "/taxinvoices/datatables"
+    });
 });
+
+function deleteTaxInvoice(id) {
+    axios.post('/taxinvoices/delete', qs.stringify({id : id}))
+        .then(res => {
+            return res.data;
+        })
+        .then(res => {
+            if(res.success === true) {
+                taxInvoiceTable.ajax.reload();
+            }else {
+
+            }
+            console.log(res);
+        });
+}
+
+window.deleteTaxInvoice = deleteTaxInvoice;

@@ -39,7 +39,7 @@ class CustomerController extends Controller
             'address'   => 'required',
             'phone'     => 'required',
             'email'     => 'required',
-            'details'   => 'required'
+            'detail'    => 'required'
         ];
 
         $validator = Validator::make($req->all(), $rules);
@@ -57,7 +57,7 @@ class CustomerController extends Controller
             $customer->address = $req->address;
             $customer->phone = $req->phone;
             $customer->email = $req->email;
-            $customer->details = $req->details;
+            $customer->details = $req->detail;
             $customer->is_active = true;
 
             $customer->save();

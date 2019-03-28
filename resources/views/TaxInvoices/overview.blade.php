@@ -24,7 +24,6 @@
                     <table id="taxInvoiceTable" class="table table-hover" style="width: 100%; table-layout: fixed">
                         <thead>
                         <tr>
-                            <th style="width: 7%;">No</th>
                             <th style="width: 20%;">Invoice No</th>
                             <th>Date</th>
                             <th>Cashed</th>
@@ -48,7 +47,6 @@
                         </tbody>
                         <tfoot>
                         <tr>
-                            <th style="width: 7%;">No</th>
                             <th style="width: 20%;">Invoice No</th>
                             <th>Date</th>
                             <th>Cashed</th>
