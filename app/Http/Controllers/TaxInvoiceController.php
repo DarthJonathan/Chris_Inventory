@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\TaxInvoice;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Validator;
 
 class TaxInvoiceController extends Controller
 {
 
     /**
-     * Products overview
+     * Tax Invoice overview
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function overview() {
@@ -27,7 +28,7 @@ class TaxInvoiceController extends Controller
     }
 
     /**
-     * New Product view
+     * New tax invoice view
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function newView() {
@@ -35,7 +36,7 @@ class TaxInvoiceController extends Controller
     }
 
     /**
-     * Handle creating new customer record
+     * Handle creating new tax invoices record
      * @param Request $req
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -44,6 +45,7 @@ class TaxInvoiceController extends Controller
             'invoiceno' => 'required',
             'date'      => 'required',
             'cashed'    => 'required',
+            'customer'  => 'nullable|numeric'
         ];
 
         $validator = Validator::make($req->all(), $rules);
@@ -59,7 +61,12 @@ class TaxInvoiceController extends Controller
 
             $customer->invoice_no = $req->invoiceno;
             $customer->date = $req->date;
-            $customer->cashed = $req->cashed;
+            $customer->used = $req->cashed ? 1 : 0;
+
+            if($req->cashed){
+                $customer->credited = Carbon::now();
+            }
+
             $customer->is_active = true;
 
             $customer->save();
@@ -70,52 +77,42 @@ class TaxInvoiceController extends Controller
     }
 
     /**
-     * Edit customer view
+     * Edit Tax Invoice view
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function editItemView($id) {
         $item = TaxInvoice::find($id);
         $data = [
-            'customer'  => $item
+            'taxinvoice'  =>  $item
         ];
-        return View("customers/edit", $data);
+        return view('taxinvoices.edit', $data);
     }
 
     /**
-     * Handle edit product
+     * Handle edit tax invoice
      * @param Request $req
      * @return \Illuminate\Http\RedirectResponse
      */
     public function editSubmit(Request $req) {
         $rules = [
-            'name'      => 'required',
-            'address'   => 'required',
-            'phone'     => 'required',
-            'email'     => 'required',
-            'details'   => 'required',
-            'id'        => 'required'
+            'id'        => 'required',
+            'invoiceno' => 'required',
+            'date'      => 'required',
+            'cashed'    => 'required',
+            'customer'  => 'nullable|numeric'
         ];
 
         $validator = Validator::make($req->all(), $rules);
 
         if($validator->fails()) {
-            return redirect('/customers/new')
+            return redirect('/taxinvoices/edit/' . $req->id)
                 ->withErrors($validator)
                 ->withInput();
         }
 
         try {
-            $customer = Customers::find($req->id);
 
-            $customer->name = $req->name;
-            $customer->address = $req->address;
-            $customer->phone = $req->phone;
-            $customer->email = $req->email;
-            $customer->details = $req->details;
-            $customer->is_active = true;
-
-            $customer->save();
             return redirect('/customers')->with('success', 'Success saving customer data');
         }catch(\Exception $e){
             return back()->withErrors("Error, (" . $e->getMessage() . ")");
@@ -123,7 +120,7 @@ class TaxInvoiceController extends Controller
     }
 
     /**
-     * Delete product
+     * Delete tax invoice
      * @param Request $req
      * @return \Illuminate\Http\RedirectResponse
      */

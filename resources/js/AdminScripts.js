@@ -1,8 +1,9 @@
 var taxInvoiceTable;
+var customerTable;
 
 $(document).ready(function() {
     //Product page
-    var productsTable = $('#productsOverview').DataTable( {
+    var productsTable = $('#productsOverview').DataTable({
         "processing": true,
         "serverSide": true,
         "columns": [
@@ -11,18 +12,18 @@ $(document).ready(function() {
             {'data': 'stock'},
             {
                 'data': 'queue.price',
-                render: function(data, type, row) {
+                render: function (data, type, row) {
                     return 'Rp.' + data + ',00';
                 }
             },
             {
                 'data': null,
-                render : function(data, type, row) {
+                render: function (data, type, row) {
                     return '<button class="btn btn-primary mr-2 edit-product" data-type="edit">' +
-                            '<i class="icon-pencil"></i>' +
+                        '<i class="icon-pencil"></i>' +
                         '</button>' +
                         '<button class="btn btn-danger delete-product" data-type="delete">' +
-                            '<i class="icon-trash"></i>' +
+                        '<i class="icon-trash"></i>' +
                         '</button>'
                 }
             },
@@ -30,22 +31,22 @@ $(document).ready(function() {
         "ajax": "/products/datatables"
     });
 
-    $('#productsOverview tbody').on('click', 'button', function() {
-        var data = productsTable.row( $(this).parents('tr') ).data();
+    $('#productsOverview tbody').on('click', 'button', function () {
+        var data = productsTable.row($(this).parents('tr')).data();
         var type = $(this).data('type');
 
-        if(type === "edit") {
+        if (type === "edit") {
             window.location.href = '/products/edit/' + data.id;
-        }else{
-            axios.post('/products/delete', qs.stringify({id : data.id}))
+        } else {
+            axios.post('/products/delete', qs.stringify({id: data.id}))
                 .then(res => {
                     return res.data;
                 })
                 .then(res => {
-                    if(res.success === true) {
+                    if (res.success === true) {
                         productsTable.ajax.reload();
-                    }else {
-                        
+                    } else {
+
                     }
                     console.log(res);
                 });
@@ -54,15 +55,15 @@ $(document).ready(function() {
     });
 
     //Purchases Table
-    var purchasesTable = $('#purchasesTable').DataTable( {
+    var purchasesTable = $('#purchasesTable').DataTable({
         "processing": true,
         "serverSide": true,
         "columns": [
             {'data': 'invoice_id'},
             {
                 'data': 'tax_invoice_id',
-                render: function(data,type,row) {
-                    if(data === null)
+                render: function (data, type, row) {
+                    if (data === null)
                         return 'None';
                     else
                         return data;
@@ -71,15 +72,15 @@ $(document).ready(function() {
             {'data': 'transaction_date'},
             {
                 'data': null,
-                render : function(data, type, row) {
+                render: function (data, type, row) {
                     return '<button class="btn btn-primary mr-2 edit-product" data-type="details">' +
-                            'Details' +
+                        'Details' +
                         '</button>' +
                         '<button class="btn btn-primary mr-2 edit-product" data-type="edit">' +
-                            '<i class="icon-pencil"></i>' +
+                        '<i class="icon-pencil"></i>' +
                         '</button>' +
                         '<button class="btn btn-danger delete-product" data-type="delete">' +
-                            '<i class="icon-trash"></i>' +
+                        '<i class="icon-trash"></i>' +
                         '</button>'
                 }
             },
@@ -87,23 +88,23 @@ $(document).ready(function() {
         "ajax": "/purchases/datatables"
     });
 
-    $('#purchasesTable tbody').on('click', 'button', function() {
-        var data = purchasesTable.row( $(this).parents('tr') ).data();
+    $('#purchasesTable tbody').on('click', 'button', function () {
+        var data = purchasesTable.row($(this).parents('tr')).data();
         var type = $(this).data('type');
 
-        if(type === "edit") {
+        if (type === "edit") {
             window.location.href = '/purchases/edit/' + data.id;
-        }else if(type === "details"){
+        } else if (type === "details") {
             window.location.href = '/purchases/details/' + data.id;
-        }else{
-            axios.post('/purchases/delete', qs.stringify({id : data.id}))
+        } else {
+            axios.post('/purchases/delete', qs.stringify({id: data.id}))
                 .then(res => {
                     return res.data;
                 })
                 .then(res => {
-                    if(res.success === true) {
+                    if (res.success === true) {
                         purchasesTable.ajax.reload();
-                    }else {
+                    } else {
 
                     }
                     console.log(res);
@@ -112,7 +113,7 @@ $(document).ready(function() {
     });
 
     //Sales Table
-    var salesTable = $('#salesTable').DataTable( {
+    var salesTable = $('#salesTable').DataTable({
         "processing": true,
         "serverSide": true,
         "columns": [
@@ -120,8 +121,8 @@ $(document).ready(function() {
             {'data': 'transaction_date'},
             {
                 'data': 'tax_invoice_id',
-                render: function(data,type,row) {
-                    if(data === null)
+                render: function (data, type, row) {
+                    if (data === null)
                         return 'None';
                     else
                         return data;
@@ -129,15 +130,15 @@ $(document).ready(function() {
             },
             {
                 'data': 'sales.id',
-                render : function(data, type, row) {
+                render: function (data, type, row) {
                     return '<button class="btn btn-primary mr-2 edit-product" data-type="details">' +
-                            'Details' +
+                        'Details' +
                         '</button>' +
                         '<button class="btn btn-primary mr-2 edit-product" data-type="edit">' +
-                            '<i class="icon-pencil"></i>' +
+                        '<i class="icon-pencil"></i>' +
                         '</button>' +
                         '<button class="btn btn-danger delete-product" data-type="delete">' +
-                            '<i class="icon-trash"></i>' +
+                        '<i class="icon-trash"></i>' +
                         '</button>'
                 }
             },
@@ -145,23 +146,23 @@ $(document).ready(function() {
         "ajax": "/sales/datatables"
     });
 
-    $('#salesTable tbody').on('click', 'button', function() {
-        var data = salesTable.row( $(this).parents('tr') ).data();
+    $('#salesTable tbody').on('click', 'button', function () {
+        var data = salesTable.row($(this).parents('tr')).data();
         var type = $(this).data('type');
 
-        if(type === "edit") {
+        if (type === "edit") {
             window.location.href = '/sales/edit/' + data.id;
-        }else if(type === "details"){
+        } else if (type === "details") {
             window.location.href = '/sales/details/' + data.id;
-        }else{
-            axios.post('/sales/delete', qs.stringify({id : data.id}))
+        } else {
+            axios.post('/sales/delete', qs.stringify({id: data.id}))
                 .then(res => {
                     return res.data;
                 })
                 .then(res => {
-                    if(res.success === true) {
+                    if (res.success === true) {
                         salesTable.ajax.reload();
-                    }else {
+                    } else {
 
                     }
                     console.log(res);
@@ -174,9 +175,9 @@ $(document).ready(function() {
         "processing": true,
         "serverSide": true,
         "columns": [
-            {'data' : 'invoice_no'},
+            {'data': 'invoice_no'},
             {
-                'data' : 'date',
+                'data': 'date',
                 render: (data) => {
                     return '<span>' + data + '</span>';
                 }
@@ -184,9 +185,9 @@ $(document).ready(function() {
             {
                 data: 'used',
                 render: (data) => {
-                    if(data) {
+                    if (data) {
                         return '<span>Used</span>';
-                    }else {
+                    } else {
                         return '<span>Not Used</span>';
                     }
                 }
@@ -195,18 +196,34 @@ $(document).ready(function() {
                 data: 'id',
                 render: (data) => {
                     return '<a href="/taxinvoices/details/' + data + '" class="btn btn-primary mr-2 edit-product">' +
-                            'Details' +
-                        '</a>' +
-                        '<a href="/taxinvoices/edit/' + data + '" class="btn btn-primary mr-2 edit-product">' +
-                            '<i class="icon-pencil"></i>' +
-                        '</a>' +
-                        '<button onclick="deleteTaxInvoice(' + data + ')" class="btn btn-danger delete-product">' +
-                            '<i class="icon-trash"></i>' +
-                        '</button>'
+                        'Details' +
+                        '</a>';
                 }
             }
         ],
         "ajax": "/taxinvoices/datatables"
+    });
+
+    // Tax Invoices Table
+    customerTable = $('#customerTable').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "columns": [
+            {data: 'id'},
+            {data: 'name'},
+            {data: 'phone'},
+            {data: 'email'},
+            {data: 'details'},
+            {
+                data: 'id',
+                render: (data) => {
+                    return '<a href="/customers/details/' + data + '" class="btn btn-primary mr-2 edit-product">' +
+                        'Details' +
+                        '</a>';
+                }
+            }
+        ],
+        "ajax": "/api/v1/customers_datatables"
     });
 });
 

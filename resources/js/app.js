@@ -9,3 +9,5 @@ require('./components/NewPurchaseForm');
 require('./components/EditPurchaseForm');
 require('./components/NewSalesComponent');
 require('./components/EditSalesComponent');
+require('./components/NewTaxInvoiceForm');
+require('./components/EditTaxInvoice');

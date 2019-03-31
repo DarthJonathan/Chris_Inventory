@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Customers;
 use App\Products;
 use App\TaxInvoice;
-use Illuminate\Http\Request;
 
 class ApiController extends Controller
 {
@@ -22,5 +22,23 @@ class ApiController extends Controller
      */
     public function getTaxInvoices() {
         return response()->json(TaxInvoice::all());
+    }
+
+    /**
+     * Get all customers api call
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAllCustomers() {
+        return response()->json(Customers::all());
+    }
+
+    /**
+     * Handle all customer api from datatables
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAllCustomersDatatables() {
+        return datatables(Customers::all())->toJson();
     }
 }

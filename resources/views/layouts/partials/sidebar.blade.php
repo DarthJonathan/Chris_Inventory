@@ -40,7 +40,7 @@
             <li class="nav-item dropdown">
                 <a class="dropdown-toggle" href="javascript:void(0);">
                     <span class="icon-holder">
-                      <i class="c-orange-500 ti-layout-list-thumb"></i>
+                      <i class="c-red-500 ti-bar-chart"></i>
                     </span>
                     <span class="title">Reports</span>
                     <span class="arrow">
@@ -78,7 +78,7 @@
             <li class="nav-item dropdown">
                 <a class="dropdown-toggle" href="javascript:void(0);">
                     <span class="icon-holder">
-                      <i class="c-orange-500 ti-layout-list-thumb"></i>
+                      <i class="c-orange-500 ti-agenda"></i>
                     </span>
                     <span class="title">Tax Invoices</span>
                     <span class="arrow">

@@ -24,6 +24,8 @@ Route::get('/test', function() {
 Route::prefix('api/v1')->group(function(){
    Route::get('products', 'ApiController@getProducts');
    Route::post('tax_invoices', 'ApiController@getTaxInvoices');
+   Route::get('customers', 'ApiController@getAllCustomers');
+   Route::get('customers_datatables', 'ApiController@getAllCustomersDatatables');
 });
 
 Route::prefix('purchases')->group(function() {
@@ -59,6 +61,7 @@ Route::prefix('sales')->group(function(){
 
 Route::prefix('customers')->group(function() {
     Route::get('/', 'CustomerController@overview');
+    Route::get('/details/{id}', 'CustomerController@details');
     Route::get('/new', 'CustomerController@newView');
     Route::post('/new', 'CustomerController@handleNew');
     Route::get('/edit/{id}', 'CustomerController@editItemView');
@@ -70,7 +73,7 @@ Route::prefix('taxinvoices')->group(function() {
     Route::get('/', 'TaxInvoiceController@overview');
     Route::get('/datatables', 'TaxInvoiceController@overviewDatatables');
 
-    Route::get('/details', 'TaxInvoiceController@details');
+    Route::get('/details/{id}', 'TaxInvoiceController@details');
 
     Route::get('/new', 'TaxInvoiceController@newView');
     Route::post('/new', 'TaxInvoiceController@handleNew');
