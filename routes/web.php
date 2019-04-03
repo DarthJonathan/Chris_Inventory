@@ -83,3 +83,7 @@ Route::prefix('taxinvoices')->group(function() {
 
     Route::get('/year', 'TaxInvoiceController@yearlyTaxInvoice');
 });
+
+Route::prefix('report')->group(function(){
+    Route::get('/yearly', 'ReportController@yearly');
+});

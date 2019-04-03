@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 import Axios from 'axios';
 import Select from 'react-select';
+import DatePicker from 'react-datepicker';
 
 class NewTaxInvoiceForm extends Component {
 
@@ -10,7 +11,8 @@ class NewTaxInvoiceForm extends Component {
         super(props);
 
         this.state={
-            customers:[]
+            customers:[],
+            date: new Date()
         }
     }
 
@@ -37,6 +39,14 @@ class NewTaxInvoiceForm extends Component {
             .catch(err => {
                 alert(err);
             });
+
+        this.handleChangeDate = this.handleChangeDate.bind(this);
+    }
+
+    handleChangeDate(e) {
+        this.setState({
+            date: e
+        });
     }
 
     render() {
@@ -50,9 +60,17 @@ class NewTaxInvoiceForm extends Component {
             </div>
 
             <div className="form-group row">
-                <label htmlFor="date" className="col-sm-3 col-form-label">Date</label>
+                <label htmlFor="date" className="col-sm-3 col-form-label">Month</label>
                 <div className="col-sm-9">
-                    <input type="date" name="date" id="date" className="form-control" placeholder="Enter Date"/>
+                    <DatePicker
+                        name="date"
+                        id="date"
+                        className="form-control"
+                        selected={this.state.date}
+                        onChange={this.handleChangeDate}
+                        dateFormat="MMMM yyyy"
+                        showMonthYearPicker
+                    />
                 </div>
             </div>
 

@@ -60,7 +60,7 @@ class TaxInvoiceController extends Controller
             $customer = new TaxInvoice();
 
             $customer->invoice_no = $req->invoiceno;
-            $customer->date = $req->date;
+            $customer->date = Carbon::parse($req->date);
             $customer->used = $req->cashed ? 1 : 0;
 
             if($req->cashed){

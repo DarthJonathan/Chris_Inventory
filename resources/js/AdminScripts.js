@@ -179,7 +179,7 @@ $(document).ready(function() {
             {
                 'data': 'date',
                 render: (data) => {
-                    return '<span>' + data + '</span>';
+                    return moment(data).format("MMMM YYYY");
                 }
             },
             {
