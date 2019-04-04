@@ -225,6 +225,36 @@ $(document).ready(function() {
         ],
         "ajax": "/api/v1/customers_datatables"
     });
+
+    //Yearly report table
+    yearlyReportTable = $('#yearlyReportTable').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "columns": [
+            {
+                data: 'invoice_id'
+            },
+            {
+                data: 'date'
+            },
+            {
+                data: 'invoice_id'
+            },
+            {
+                data: 'invoice_id',
+                render: (data) => {
+                    return data;
+                }
+            }
+        ],
+        "ajax": "/report/yearly/datatables/" + $("#yearlyReportTable").data('type') + "/" + $("#year").val()
+    });
+    $("#year").change(() => {
+        yearlyReportTable
+                .ajax
+                .url("/report/yearly/datatables/" + $("#yearlyReportTable").data('type') + "/" + $("#year").val())
+                .load();
+    });
 });
 
 function deleteTaxInvoice(id) {

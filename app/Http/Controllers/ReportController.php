@@ -13,8 +13,11 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function yearly() {
-        return view('reports.yearly');
+    public function yearly(String $parameter) {
+        $data = [
+            'type'  => $parameter
+        ];
+        return view('reports.yearly', $data);
     }
 
     /**
@@ -22,8 +25,8 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function yearlyDatatable() {
-        return datatables($this->composesYearlyTransactionReport(2019))->toJson();
+    public function yearlyDatatables(String $type, int $year) {
+        return datatables($this->composesYearlyTransactionReport($type, $year))->toJson();
     }
 
     /**
@@ -32,10 +35,10 @@ class ReportController extends Controller
      * @param $year
      * @return \Illuminate\Support\Collection of report
      */
-    public function composesYearlyTransactionReport($year) {
+    public function composesYearlyTransactionReport(String $type, int $year) {
         $report = collect([]);
 
-        $purchases = Transaction::where('type', 'Purchase')->whereYear('created_at', '=', Carbon::parse('01-01-' . $year)->year)->get();
+        $purchases = Transaction::where('type', $type)->whereYear('transaction_date', '=', Carbon::parse('01-01-' . $year)->year)->get();
 
         foreach($purchases as $purchase) {
             foreach($purchase->purchases as $item) {
