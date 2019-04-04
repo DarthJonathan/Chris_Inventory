@@ -14,6 +14,10 @@ class ReportController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function yearly(String $parameter) {
+        if($parameter != 'purchase' && $parameter != 'sales'){
+            abort(404);
+        }
+
         $data = [
             'type'  => $parameter
         ];
@@ -46,9 +50,11 @@ class ReportController extends Controller
 
                 $report_new->date           = $purchase->transaction_date;
                 $report_new->invoice_id     = $purchase->invoice_id;
+                $report_new->tax_invoice_id = $purchase->tax_invoice_id;
                 $report_new->product_name   = $item->product->product_name;
                 $report_new->quantity       = $item->quantity;
                 $report_new->discount       = $item->discount;
+                $report_new->price          = $item->price;
 
                 $report->add($report_new);
             }

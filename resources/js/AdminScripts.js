@@ -238,10 +238,29 @@ $(document).ready(function() {
                 data: 'date'
             },
             {
-                data: 'invoice_id'
+                data: 'tax_invoice_id',
+                render: (data) => {
+                    if(data === null) {
+                        return 'N/A';
+                    }else {
+                        return data;
+                    }
+                }
             },
             {
-                data: 'invoice_id',
+                data: 'product_name'
+            },
+            {
+                data: 'quantity'
+            },
+            {
+                data: 'price'
+            },
+            {
+                data: 'discount'
+            },
+            {
+                data: 'discount',
                 render: (data) => {
                     return data;
                 }
@@ -255,6 +274,12 @@ $(document).ready(function() {
                 .url("/report/yearly/datatables/" + $("#yearlyReportTable").data('type') + "/" + $("#year").val())
                 .load();
     });
+
+    if($('#year')) {
+        let yearNow = new Date().getFullYear();
+        for(var i=yearNow-1; i>yearNow-5; i--)
+            $('#year').append('<option value="' + i + '">' + i + '</option>');
+    }
 });
 
 function deleteTaxInvoice(id) {
