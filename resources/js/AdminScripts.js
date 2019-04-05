@@ -232,20 +232,10 @@ $(document).ready(function() {
         "serverSide": true,
         "columns": [
             {
-                data: 'invoice_id'
-            },
-            {
                 data: 'date'
             },
             {
-                data: 'tax_invoice_id',
-                render: (data) => {
-                    if(data === null) {
-                        return 'N/A';
-                    }else {
-                        return data;
-                    }
-                }
+                data: 'invoice_id'
             },
             {
                 data: 'product_name'
@@ -260,11 +250,21 @@ $(document).ready(function() {
                 data: 'discount'
             },
             {
-                data: 'discount',
+                data: 'price, total',
                 render: (data) => {
-                    return data;
+                    return 'Rp.' + (data.price * data.total) + ',-'
                 }
-            }
+            },
+            {
+                data: 'tax_invoice_id',
+                render: (data) => {
+                    if(data === null) {
+                        return 'N/A';
+                    }else {
+                        return data;
+                    }
+                }
+            },
         ],
         "ajax": "/report/yearly/datatables/" + $("#yearlyReportTable").data('type') + "/" + $("#year").val()
     });

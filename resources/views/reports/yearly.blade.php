@@ -18,14 +18,22 @@
                     <table class="table table-hover" id="yearlyReportTable" data-type="{{$type}}">
                         <thead>
                         <tr>
+                            <th>Date</th>
                             <th>Invoice No</th>
-                            <th>Sale Date</th>
-                            <th>Tax Invoice</th>
                             <th>Product</th>
                             <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Discount</th>
-                            <th style="width: 15%">Action</th>
+                            <th>Price (Include VAT)</th>
+                            <th>Discount (Include VAT)</th>
+                            <th>Total (Include VAT)</th>
+                            <th>Price (Ex. VAT)</th>
+                            <th>Discount (Ex. VAT)</th>
+                            <th>Total HPP (Ex. VAT)</th>
+                            <th>Total Discount (Ex. VAT)</th>
+                            <th>Tax Base</th>
+                            <th>VAT</th>
+                            <th>Tax Invoice</th>
+                            <th>Tax Invoice Date</th>
+                            <th>Credited In VAT Period</th>
                         </tr>
                         </thead>
                         <tbody>
