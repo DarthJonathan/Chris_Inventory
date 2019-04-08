@@ -44,6 +44,8 @@ if (token) {
 window.pickaday = require("pikaday");
 window.sparkline = require('sparkline');
 window.DataTable = require('datatables.net-bs4');
+window.DataTable = require('datatables.net-responsive-bs4');
+window.DataTable = require('datatables.net-rowreorder-bs4');
 window.qs = require('qs');
 window.moment = require('moment');
 

@@ -230,6 +230,7 @@ $(document).ready(function() {
     yearlyReportTable = $('#yearlyReportTable').DataTable({
         "processing": true,
         "serverSide": true,
+        "responsive": true,
         "columns": [
             {
                 data: 'date'
@@ -244,15 +245,73 @@ $(document).ready(function() {
                 data: 'quantity'
             },
             {
-                data: 'price'
-            },
-            {
-                data: 'discount'
-            },
-            {
-                data: 'price, total',
+                data: 'price',
                 render: (data) => {
-                    return 'Rp.' + (data.price * data.total) + ',-'
+                    return 'Rp.' + data + ',-';
+                }
+            },
+            {
+                data: 'discount',
+                render: (data) => {
+                    return 'Rp.' + data + ',-';
+                }
+            },
+            {
+                data: {
+                    quantity: 'quantity', 
+                    price: 'price'
+                },
+                render: (data) => {
+                    return 'Rp.' + (data.price * data.quantity) + ',-';
+                }
+            },
+            {
+                data: 'price',
+                render: (data) => {
+                    return 'Rp.' + (data / 1.1).toFixed(2) + ',-';
+                }
+            },
+            {
+                data: 'discount',
+                render: (data) => {
+                    return 'Rp.' + (data / 1.1).toFixed(2) + ',-';
+                }
+            },
+            {
+                data: {
+                    quantity: 'quantity', 
+                    price: 'price'
+                },
+                render: (data) => {
+                    return 'Rp.' + ((data.price / 1.1).toFixed(2) * (data.quantity / 1.1).toFixed(2)).toFixed(2) + ',-';
+                }
+            },
+            {
+                data: {
+                    quantity: 'quantity', 
+                    price: 'price'
+                },
+                render: (data) => {
+                    return 'Rp.' + ((data.price / 1.1).toFixed(2) * (data.quantity / 1.1).toFixed(2)).toFixed(2) + ',-';
+                }
+            },
+            {
+                data: {
+                    quantity: 'quantity', 
+                    discount: 'discount'
+                },
+                render: (data) => {
+                    return 'Rp.' + ((data.discount / 1.1).toFixed(2) * (data.quantity / 1.1).toFixed(2)).toFixed(2) + ',-';
+                }
+            },
+            {
+                data: {
+                    quantity: 'quantity', 
+                    discount: 'discount',
+                    price: 'price'
+                },
+                render: (data) => {
+                    return 'Rp.' + ((data.quantity/1.1).toFixed(2) - (data.discount / 1.1).toFixed(2) * (data.quantity / 1.1).toFixed(2)).toFixed(2) + ',-';
                 }
             },
             {

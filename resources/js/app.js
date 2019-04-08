@@ -1,6 +1,5 @@
 //Dependencies
 require('./bootstrap');
-
 //Adminator
 require('./scripts');
 require('./AdminScripts');
