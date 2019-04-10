@@ -49,16 +49,16 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a class='sidebar-link' href="/report/purchases/monthly">Monthly Purcases</a>
+                        <a class='sidebar-link' href="/report/monthly/purchase">Monthly Purcases</a>
                     </li>
                     <li>
-                        <a class='sidebar-link' href="/report/purchases/yearly">Yearly Purchases</a>
+                        <a class='sidebar-link' href="/report/yearly/purchase">Yearly Purchases</a>
                     </li>
                     <li>
-                        <a class='sidebar-link' href="/report/sales/monthly">Monthly Sales</a>
+                        <a class='sidebar-link' href="/report/monthly/sales">Monthly Sales</a>
                     </li>
                     <li>
-                        <a class='sidebar-link' href="/report/sales/yearly">Yearly Sales</a>
+                        <a class='sidebar-link' href="/report/yearly/sales">Yearly Sales</a>
                     </li>
                 </ul>
             </li>

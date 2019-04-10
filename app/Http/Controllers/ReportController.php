@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\TaxInvoice;
 use App\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -56,6 +57,23 @@ class ReportController extends Controller
                 $report_new->discount       = $item->discount;
                 $report_new->price          = $item->price;
 
+                //Tax Invoice
+                $taxInvoice = new \stdClass();
+                $loadedTaxInvoice = TaxInvoice::find($purchase->tax_invoice_id);
+
+                if($loadedTaxInvoice == null) {
+                    $taxInvoice->credited_date = null;
+                    $taxInvoice->date = null;
+                    $taxInvoice->tax_invoice_no = null;
+                    $taxInvoice->id = $purchase->tax_invoice_id;
+                }else {
+                    $taxInvoice->credited_date = $loadedTaxInvoice->credited;
+                    $taxInvoice->date = $loadedTaxInvoice->date;
+                    $taxInvoice->tax_invoice_no = $loadedTaxInvoice->invoice_no;
+                    $taxInvoice->id = $purchase->tax_invoice_id;
+                }
+
+                $report_new->tax_invoice = $taxInvoice;
                 $report->add($report_new);
             }
         }

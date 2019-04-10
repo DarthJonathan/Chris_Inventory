@@ -233,7 +233,10 @@ $(document).ready(function() {
         "responsive": true,
         "columns": [
             {
-                data: 'date'
+                data: 'date',
+                render: (data) => {
+                    return moment(data).format("LLLL")
+                }
             },
             {
                 data: 'invoice_id'
@@ -306,12 +309,32 @@ $(document).ready(function() {
             },
             {
                 data: {
-                    quantity: 'quantity', 
+                    quantity: 'quantity',
                     discount: 'discount',
                     price: 'price'
                 },
                 render: (data) => {
                     return 'Rp.' + ((data.quantity/1.1).toFixed(2) - (data.discount / 1.1).toFixed(2) * (data.quantity / 1.1).toFixed(2)).toFixed(2) + ',-';
+                }
+            },
+            {
+                data: 'tax_invoice.tax_invoice_no',
+                render: (data) => {
+                    if(data === null) {
+                        return 'N/A';
+                    }else {
+                        return data;
+                    }
+                }
+            },
+            {
+                data: 'tax_invoice.date',
+                render: (data) => {
+                    if(data === null) {
+                        return 'N/A';
+                    }else {
+                        return data;
+                    }
                 }
             },
             {
