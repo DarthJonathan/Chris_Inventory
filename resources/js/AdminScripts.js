@@ -262,59 +262,31 @@ $(document).ready(function() {
             {
                 data: {
                     quantity: 'quantity', 
-                    price: 'price'
-                },
-                render: (data) => {
-                    return 'Rp.' + (data.price * data.quantity) + ',-';
-                }
-            },
-            {
-                data: 'price',
-                render: (data) => {
-                    return 'Rp.' + (data / 1.1).toFixed(2) + ',-';
-                }
-            },
-            {
-                data: 'discount',
-                render: (data) => {
-                    return 'Rp.' + (data / 1.1).toFixed(2) + ',-';
-                }
-            },
-            {
-                data: {
-                    quantity: 'quantity', 
-                    price: 'price'
-                },
-                render: (data) => {
-                    return 'Rp.' + ((data.price / 1.1).toFixed(2) * (data.quantity / 1.1).toFixed(2)).toFixed(2) + ',-';
-                }
-            },
-            {
-                data: {
-                    quantity: 'quantity', 
-                    price: 'price'
-                },
-                render: (data) => {
-                    return 'Rp.' + ((data.price / 1.1).toFixed(2) * (data.quantity / 1.1).toFixed(2)).toFixed(2) + ',-';
-                }
-            },
-            {
-                data: {
-                    quantity: 'quantity', 
+                    price: 'price',
                     discount: 'discount'
                 },
                 render: (data) => {
-                    return 'Rp.' + ((data.discount / 1.1).toFixed(2) * (data.quantity / 1.1).toFixed(2)).toFixed(2) + ',-';
+                    return 'Rp.' + ((data.price - data.discount) * data.quantity) + ',-';
                 }
             },
             {
                 data: {
                     quantity: 'quantity',
-                    discount: 'discount',
-                    price: 'price'
+                    price: 'price',
+                    discount: 'discount'
                 },
                 render: (data) => {
-                    return 'Rp.' + ((data.quantity/1.1).toFixed(2) - (data.discount / 1.1).toFixed(2) * (data.quantity / 1.1).toFixed(2)).toFixed(2) + ',-';
+                    return 'Rp.' + (((data.price - data.discount) * data.quantity)/1.1).toFixed(0) + ',-';
+                }
+            },
+            {
+                data: {
+                    quantity: 'quantity',
+                    price: 'price',
+                    discount: 'discount'
+                },
+                render: (data) => {
+                    return 'Rp.' + (((data.price - data.discount) * data.quantity) - (((data.price - data.discount) * data.quantity)/1.1).toFixed(0)) + ',-';
                 }
             },
             {
@@ -338,18 +310,19 @@ $(document).ready(function() {
                 }
             },
             {
-                data: 'tax_invoice_id',
+                data: 'tax_invoice.credited_date',
                 render: (data) => {
                     if(data === null) {
                         return 'N/A';
                     }else {
-                        return data;
+                        return moment(data).format("LLLL");
                     }
                 }
             },
         ],
         "ajax": "/report/yearly/datatables/" + $("#yearlyReportTable").data('type') + "/" + $("#year").val()
     });
+
     $("#year").change(() => {
         yearlyReportTable
                 .ajax
@@ -362,8 +335,20 @@ $(document).ready(function() {
         for(var i=yearNow-1; i>yearNow-5; i--)
             $('#year').append('<option value="' + i + '">' + i + '</option>');
     }
+
+    if($('#month')) {
+        let yearNow = new Date().getFullYear();
+        let monthNow = new Date().getMonth();
+        console.log(monthNow);
+        for(var i=monthNow-1; i>1; i--)
+            $('#year').append('<option value="' + i + '">' + monthNames(i) + " " + yearnNow + '</option>');
+    }
 });
 
+/**
+ * Deletes tax invoice
+ * @param id
+ */
 function deleteTaxInvoice(id) {
     axios.post('/taxinvoices/delete', qs.stringify({id : id}))
         .then(res => {
@@ -377,6 +362,18 @@ function deleteTaxInvoice(id) {
             }
             console.log(res);
         });
+}
+
+/**
+ * Gets the month name from a month number
+ * @param monthNumber
+ */
+function monthNames(monthNumber) {
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    return (monthNames[monthNumber])
 }
 
 window.deleteTaxInvoice = deleteTaxInvoice;

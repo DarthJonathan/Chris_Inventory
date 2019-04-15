@@ -25,10 +25,6 @@
                             <th>Price (Include VAT)</th>
                             <th>Discount (Include VAT)</th>
                             <th>Total (Include VAT)</th>
-                            <th>Price (Ex. VAT)</th>
-                            <th>Discount (Ex. VAT)</th>
-                            <th>Total HPP (Ex. VAT)</th>
-                            <th>Total Discount (Ex. VAT)</th>
                             <th>Tax Base</th>
                             <th>VAT</th>
                             <th>Tax Invoice</th>

@@ -34,6 +34,17 @@ class ReportController extends Controller
         return datatables($this->composesYearlyTransactionReport($type, $year))->toJson();
     }
 
+    public function monthly(String $parameter) {
+        if($parameter != 'purchase' && $parameter != 'sales'){
+            abort(404);
+        }
+
+        $data = [
+          'type'    => $parameter
+        ];
+        return view('reports.monthly', $data);
+    }
+
     /**
      * Returns a yearly report transaction
      *
