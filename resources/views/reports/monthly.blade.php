@@ -7,7 +7,7 @@
         </div>
         <div class="col-lg-2">
             <select id="month" class="form-control mt-3">
-                <option value="{{ Carbon\Carbon::now()->month . '/' . Carbon\Carbon::now()->year }}">{{ Carbon\Carbon::now()->monthName . ' ' . Carbon\Carbon::now()->year }}</option>
+                <option value="{{ (Carbon\Carbon::now()->month -1) }}">{{ Carbon\Carbon::now()->monthName . ' ' . Carbon\Carbon::now()->year }}</option>
             </select>
         </div>
     </div>
@@ -15,7 +15,7 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <table class="table table-hover" id="yearlyReportTable" data-type="{{$type}}">
+                    <table class="table table-hover" id="monthlyReportTable" data-type="{{$type}}">
                         <thead>
                         <tr>
                             <th>Date</th>

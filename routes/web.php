@@ -88,4 +88,5 @@ Route::prefix('report')->group(function(){
     Route::get('/yearly/{parameter}', 'ReportController@yearly');
     Route::get('/yearly/datatables/{type}/{year}', 'ReportController@yearlyDatatables');
     Route::get('/monthly/{parameter}', 'ReportController@monthly');
+    Route::get('/monthly/datatables/{type}/{month}', 'ReportController@monthlyDatatables');
 });

@@ -336,12 +336,117 @@ $(document).ready(function() {
             $('#year').append('<option value="' + i + '">' + i + '</option>');
     }
 
+    //Monthly report table
+    monthlyReportTable = $('#monthlyReportTable').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "responsive": true,
+        "columns": [
+            {
+                data: 'date',
+                render: (data) => {
+                    return moment(data).format("LLLL")
+                }
+            },
+            {
+                data: 'invoice_id'
+            },
+            {
+                data: 'product_name'
+            },
+            {
+                data: 'quantity'
+            },
+            {
+                data: 'price',
+                render: (data) => {
+                    return 'Rp.' + data + ',-';
+                }
+            },
+            {
+                data: 'discount',
+                render: (data) => {
+                    return 'Rp.' + data + ',-';
+                }
+            },
+            {
+                data: {
+                    quantity: 'quantity',
+                    price: 'price',
+                    discount: 'discount'
+                },
+                render: (data) => {
+                    return 'Rp.' + ((data.price - data.discount) * data.quantity) + ',-';
+                }
+            },
+            {
+                data: {
+                    quantity: 'quantity',
+                    price: 'price',
+                    discount: 'discount'
+                },
+                render: (data) => {
+                    return 'Rp.' + (((data.price - data.discount) * data.quantity)/1.1).toFixed(0) + ',-';
+                }
+            },
+            {
+                data: {
+                    quantity: 'quantity',
+                    price: 'price',
+                    discount: 'discount'
+                },
+                render: (data) => {
+                    return 'Rp.' + (((data.price - data.discount) * data.quantity) - (((data.price - data.discount) * data.quantity)/1.1).toFixed(0)) + ',-';
+                }
+            },
+            {
+                data: 'tax_invoice.tax_invoice_no',
+                render: (data) => {
+                    if(data === null) {
+                        return 'N/A';
+                    }else {
+                        return data;
+                    }
+                }
+            },
+            {
+                data: 'tax_invoice.date',
+                render: (data) => {
+                    if(data === null) {
+                        return 'N/A';
+                    }else {
+                        return data;
+                    }
+                }
+            },
+            {
+                data: 'tax_invoice.credited_date',
+                render: (data) => {
+                    if(data === null) {
+                        return 'N/A';
+                    }else {
+                        return moment(data).format("LLLL");
+                    }
+                }
+            },
+        ],
+        "ajax": "/report/monthly/datatables/" + $("#monthlyReportTable").data('type') + "/" + $("#month").val()
+    });
+
+    $("#month").change(() => {
+        monthlyReportTable
+            .ajax
+            .url("/report/monthly/datatables/" + $("#monthlyReportTable").data('type') + "/" + $("#month").val())
+            .load();
+    });
+
     if($('#month')) {
         let yearNow = new Date().getFullYear();
         let monthNow = new Date().getMonth();
-        console.log(monthNow);
-        for(var i=monthNow-1; i>1; i--)
-            $('#year').append('<option value="' + i + '">' + monthNames(i) + " " + yearnNow + '</option>');
+        for(var i=0; i<12; i++) {
+            if(i != monthNow)
+                $('#month').append('<option value="' + i + '">' + monthNames(i) + " " + yearNow + '</option>');
+        }
     }
 });
 
