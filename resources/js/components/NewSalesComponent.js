@@ -12,7 +12,8 @@ export default class NewSalesComponent extends Component {
         this.state = {
             products: [],
             tax_invoice: [],
-            items: 1
+            items: 1,
+            customers: []
         }
     }
 
@@ -62,6 +63,26 @@ export default class NewSalesComponent extends Component {
             })
             .catch(err => {
                 alert(err);
+            });
+
+        Axios.get('/api/v1/customers')
+            .then(res => {
+                return res.data;
+            })
+            .then(res => {
+                let options = [];
+
+                Promise.all(res.map(item => {
+                    options.push({
+                        label: item.name,
+                        value: item.id
+                    });
+                }))
+                    .then(() => {
+                        this.setState({
+                            customers: options
+                        })
+                    })
             });
     }
 
@@ -136,6 +157,19 @@ export default class NewSalesComponent extends Component {
                                 });
                             }}>Add New Item</button>
                         </div>
+                    </div>
+                </div>
+
+                <div className="row">
+                    <div className="col-lg-12">
+                        <hr/>
+                    </div>
+                </div>
+
+                <div className="form-group row">
+                    <label htmlFor="customer" className="col-sm-3 col-form-label">Customer*</label>
+                    <div className="col-sm-9">
+                        <Select options={this.state.customers} name="customer_id" id="customer"/>
                     </div>
                 </div>
 

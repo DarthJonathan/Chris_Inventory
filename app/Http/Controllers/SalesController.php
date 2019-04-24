@@ -65,7 +65,8 @@ class SalesController extends Controller
             'item'          => 'required',
             'discount'      => 'required',
             'sales_date'    => 'required',
-            'quantity'      => 'required'
+            'quantity'      => 'required',
+            'customer_id'   => 'nullable|numeric'
         ];
 
         $validate = Validator::make($req->all(), $rules);
@@ -93,6 +94,10 @@ class SalesController extends Controller
                 $tax_invoice->invoice_no = $req->taxinvoice;
                 $tax_invoice->date = $req->taxinvoicedate;
                 $tax_invoice->save();
+            }
+
+            if($req->customer_id != null) {
+                $transaction->customer_id = $req->customer_id;
             }
 
             for($i=0; $i<collect($req->item)->count(); $i++){
