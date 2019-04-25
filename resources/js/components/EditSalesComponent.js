@@ -13,7 +13,10 @@ class EditSalesComponent extends Component {
             item: window.items,
             products: [],
             items: window.items.length,
-            additional: 0
+            additional: 0,
+            customers: [],
+            customerId: props.customerId,
+            selected: {}
         }
     }
 
@@ -39,7 +42,35 @@ class EditSalesComponent extends Component {
             })
             .catch(err => {
                 alert(err);
+            });
+
+        Axios.get('/api/v1/customers')
+            .then(res => {
+                return res.data;
             })
+            .then(res => {
+                let options = [];
+
+                Promise.all(res.map(item => {
+                    if(item.id === this.props.customerId) {
+                        this.setState({
+                            selected: {
+                                label: item.name,
+                                value: item.id
+                            }
+                        })
+                    }
+                    options.push({
+                        label: item.name,
+                        value: item.id
+                    });
+                }))
+                    .then(() => {
+                        this.setState({
+                            customers: options
+                        })
+                    })
+            });
     }
 
     handleChange(e, key) {
@@ -49,8 +80,6 @@ class EditSalesComponent extends Component {
             ...old[key],
             [e.target.id]: e.target.value
         };
-
-        console.log(old);
 
         this.setState({
             item: old
@@ -157,7 +186,6 @@ class EditSalesComponent extends Component {
     }
 
     render() {
-        console.log(this.state);
         return (
             <div>
 
@@ -175,11 +203,25 @@ class EditSalesComponent extends Component {
                         </div>
                     </div>
                 </div>
+
+                <div className="row">
+                    <div className="col-lg-12">
+                        <hr/>
+                    </div>
+                </div>
+
+                <div className="form-group row">
+                    <label htmlFor="customer" className="col-sm-3 col-form-label">Customer*</label>
+                    <div className="col-sm-9">
+                        <Select options={this.state.customers} name="customer_id" id="customer"/>
+                    </div>
+                </div>
             </div>
         );
     }
 }
 
 if (document.getElementById('editSalesComponent')) {
-    ReactDOM.render(<EditSalesComponent/>, document.getElementById('editSalesComponent'));
+    let customerId = $('#editSalesComponent').data('customer-id');
+    ReactDOM.render(<EditSalesComponent customerId={customerId}/>, document.getElementById('editSalesComponent'));
 }

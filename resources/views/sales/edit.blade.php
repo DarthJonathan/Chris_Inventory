@@ -25,7 +25,7 @@
                             </div>
                         </div>
 
-                        <div id="editSalesComponent"></div>
+                        <div id="editSalesComponent" data-customer-id="{{ $transaction->customer_id }}"></div>
 
                         <div class="row">
                             <div class="col-lg-12">

@@ -326,9 +326,7 @@ class PurchasesController extends Controller
      */
     public function deletePurchase (Request $req) {
         try {
-            $purchase = Transaction::find($req->id);
-            $purchase->is_active = false;
-            $purchase->save();
+            //TODO Delete purchase
             return redirect('/purchases')->with('success', 'Success hiding purchase');
         }catch(\Exception $e) {
             return back()->withErrors("Error deleting purchase (Error" . $e->getMessage() . ")");

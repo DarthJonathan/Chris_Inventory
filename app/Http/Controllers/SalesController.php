@@ -188,6 +188,9 @@ class SalesController extends Controller
             $transaction->transaction_date = $req->date;
             $transaction->save();
 
+            if($req->customer_id != null)
+                $transaction->customer_id = $req->customer_id;
+
             $counter = 0;
 
             foreach($transaction->sales as $i => $sale)
@@ -266,7 +269,7 @@ class SalesController extends Controller
     public function delete(Request $req)
     {
         try {
-
+            //TODO delete sales
 
             return redirect('/purchases')->with('success', 'Success deleting sales');
         }catch(\Exception $e) {
