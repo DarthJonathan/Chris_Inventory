@@ -334,20 +334,23 @@ class PurchasesController extends Controller
             $transaction = Transaction::find($req->id);
 
             //Set transaction to deleted / is_active
-            $transaction->is_active = false;
-            $purchases = $transaction->purcahses;
+            $transaction->is_active = 0;
+            $purchases = $transaction->purchases;
 
             foreach($purchases as $purchase) {
                 //Set is active to false
-                $purchase->is_active = false;
+                $purchase->is_active = 0;
                 $product = Products::find($purchase->product_id);
                 //Add the deleted item
-                Queue::putInItemsIn($product, $purchase->quantity);
+                Queue::takeoutItems($product, $purchase->quantity);
+                $purchase->save();
             }
 
-            return redirect('/purchases')->with('success', 'Success deleting purchase');
+            $transaction->save();
+
+            return response()->json(['success' => true, 'message' => 'Success deleting purchase']);
         }catch(\Exception $e) {
-            return back()->withErrors("Error deleting purchase (Error" . $e->getMessage() . ")");
+            return response()->json(['success' => true, 'message' => 'Error deleting purchase', 'error' => $e->getMessage()]);
         }
     }
 

@@ -283,17 +283,19 @@ class SalesController extends Controller
             $transaction = Transaction::find($req->id);
 
             //Set transaction to deleted / is_active
-            $transaction->is_active = false;
+            $transaction->is_active = 0;
             $sales = $transaction->sales;
 
             foreach($sales as $sale) {
                 //Set is active to false
-                $sale->is_active = false;
+                $sale->is_active = 0;
                 $product = Products::find($sale->product_id);
                 //Add the deleted item
                 Queue::putInItemsIn($product, $sale->quantity);
+                $sale->save();
             }
 
+            $transaction->save();
             return redirect('/purchases')->with('success', 'Success deleting sales');
         }catch(\Exception $e) {
             return back()->withErrors("Error  changes (Error" . $e->getMessage() . ")");
