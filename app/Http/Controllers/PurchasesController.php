@@ -326,8 +326,26 @@ class PurchasesController extends Controller
      */
     public function deletePurchase (Request $req) {
         try {
-            //TODO Delete purchase
-            return redirect('/purchases')->with('success', 'Success hiding purchase');
+            $req->validate([
+                'id' => 'required|numeric'
+            ]);
+
+            //Load transaction
+            $transaction = Transaction::find($req->id);
+
+            //Set transaction to deleted / is_active
+            $transaction->is_active = false;
+            $purchases = $transaction->purcahses;
+
+            foreach($purchases as $purchase) {
+                //Set is active to false
+                $purchase->is_active = false;
+                $product = Products::find($purchase->product_id);
+                //Add the deleted item
+                Queue::putInItemsIn($product, $purchase->quantity);
+            }
+
+            return redirect('/purchases')->with('success', 'Success deleting purchase');
         }catch(\Exception $e) {
             return back()->withErrors("Error deleting purchase (Error" . $e->getMessage() . ")");
         }

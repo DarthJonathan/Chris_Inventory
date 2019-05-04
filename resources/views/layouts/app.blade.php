@@ -119,6 +119,6 @@
             @include('layouts.partials.footer')
         </div>
     </div>
-    @yield('additional_javascript')
 </body>
+@yield('additional_javascript')
 </html>

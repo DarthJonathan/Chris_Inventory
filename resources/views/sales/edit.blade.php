@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-12 col-xl-8 mx-auto">
+        <div class="col-md-8 mx-auto">
             <div class="card">
                 <div class="card-body">
                     <form class="forms-sample" method="post" action="{{ url('/sales/edit') }}">

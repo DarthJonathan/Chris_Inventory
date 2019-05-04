@@ -266,10 +266,33 @@ class SalesController extends Controller
         }
     }
 
+    /**
+     * Delete the sale
+     *
+     * @param Request $req
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function delete(Request $req)
     {
         try {
-            //TODO delete sales
+            $req->validate([
+                'id' => 'required|numeric'
+            ]);
+
+            //Load transaction
+            $transaction = Transaction::find($req->id);
+
+            //Set transaction to deleted / is_active
+            $transaction->is_active = false;
+            $sales = $transaction->sales;
+
+            foreach($sales as $sale) {
+                //Set is active to false
+                $sale->is_active = false;
+                $product = Products::find($sale->product_id);
+                //Add the deleted item
+                Queue::putInItemsIn($product, $sale->quantity);
+            }
 
             return redirect('/purchases')->with('success', 'Success deleting sales');
         }catch(\Exception $e) {
