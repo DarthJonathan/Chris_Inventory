@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Datamodels\Report;
+use App\Excel\YearlyReport;
 use App\TaxInvoice;
 use App\Transaction;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
@@ -124,22 +125,24 @@ class ReportController extends Controller
     public function composesYearlyTransactionReport(String $type, int $year) {
         $report = collect([]);
 
-        $purchases = Transaction::where('type', $type)->whereYear('transaction_date', '=', Carbon::parse('01-01-' . $year)->year)->get();
+        $purchases = Transaction::where('type', $type)
+                        ->whereYear('transaction_date', '=', Carbon::parse('01-01-' . $year)->year)
+                        ->get();
 
         foreach($purchases as $purchase) {
             foreach($purchase->purchases as $item) {
-                $report_new = new \stdClass();
+                $report_new = new Report();
 
-                $report_new->date           = $purchase->transaction_date;
-                $report_new->invoice_id     = $purchase->invoice_id;
-                $report_new->tax_invoice_id = $purchase->tax_invoice_id;
-                $report_new->product_name   = $item->product->product_name;
-                $report_new->quantity       = $item->quantity;
-                $report_new->discount       = $item->discount;
-                $report_new->price          = $item->price;
+                $report_new->setDate($purchase->transaction_date);
+                $report_new->setInvoiceId($purchase->invoice_id);
+                $report_new->setTaxInvoiceId($purchase->tax_invoice_id);
+                $report_new->setProductName($item->product->product_name);
+                $report_new->setQuantity($item->quantity);
+                $report_new->setDiscount($item->discount);
+                $report_new->setPrice($item->price);
 
                 //Tax Invoice
-                $taxInvoice = new \stdClass();
+                $taxInvoice = new \App\Datamodels\TaxInvoice();
                 $loadedTaxInvoice = TaxInvoice::find($purchase->tax_invoice_id);
 
                 if($loadedTaxInvoice == null) {
@@ -154,11 +157,28 @@ class ReportController extends Controller
                     $taxInvoice->id = $purchase->tax_invoice_id;
                 }
 
-                $report_new->tax_invoice = $taxInvoice;
+                $report_new->setTaxInvoice($taxInvoice);
                 $report->add($report_new);
             }
         }
 
         return $report;
+    }
+
+
+    public function exportYearly(String $type, int $year) {
+        if($type != 'purchase' && $type != 'sales'){
+            abort(404);
+        }
+
+        //Composes the report
+        $report = $this->composesYearlyTransactionReport($type, $year);
+
+        try {
+            return (new YearlyReport($report))->download('Yearly.xlsx');
+        }catch (\Exception $e) {
+            dd($e);
+        }
+        return false;
     }
 }

@@ -74,13 +74,13 @@ $(document).ready(function() {
                 'data': null,
                 render: function (data, type, row) {
                     return '<button class="btn btn-primary mr-2 edit-product" data-type="details">' +
-                        'Details' +
+                            '<i class="icon-info"></i>' +
                         '</button>' +
                         '<button class="btn btn-primary mr-2 edit-product" data-type="edit">' +
-                        '<i class="icon-pencil"></i>' +
+                            '<i class="icon-pencil"></i>' +
                         '</button>' +
                         '<button class="btn btn-danger delete-product" data-type="delete">' +
-                        '<i class="icon-trash"></i>' +
+                            '<i class="icon-trash"></i>' +
                         '</button>'
                 }
             },
@@ -132,7 +132,7 @@ $(document).ready(function() {
                 'data': 'sales.id',
                 render: function (data, type, row) {
                     return '<button class="btn btn-primary mr-2 edit-product" data-type="details">' +
-                        'Details' +
+                        '<i class="icon-info"></i>' +
                         '</button>' +
                         '<button class="btn btn-primary mr-2 edit-product" data-type="edit">' +
                         '<i class="icon-pencil"></i>' +

@@ -24,6 +24,9 @@
 @import '~fullcalendar/dist/fullcalendar.min.css';
 @import '~react-datepicker/dist/react-datepicker.min.css';
 
+$ionicons-font-path: "~ionicons/dist/fonts";
+@import '~ionicons/dist/css/ionicons.min.css';
+
 //Personal
 @import './style';
 
