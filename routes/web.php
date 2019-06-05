@@ -92,5 +92,6 @@ Route::prefix('report')->group(function(){
 
     Route::prefix('export')->group(function() {
        Route::get('/yearly/{type}/{year}', 'ReportController@exportYearly');
+       Route::get('/monthly/{type}/{year}', 'ReportController@exportMonthly');
     });
 });

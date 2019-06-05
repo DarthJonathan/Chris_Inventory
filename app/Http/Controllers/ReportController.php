@@ -3,13 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Datamodels\Report;
+use App\Datamodels\ReportExcel;
 use App\Excel\YearlyReport;
+use App\Helpers\StringUtil;
 use App\TaxInvoice;
 use App\Transaction;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 class ReportController extends Controller
 {
+    /** @var string Currency */
+    private                 $currency = 'rupiah';
+
     /**
      * Yearly report view
      *
@@ -165,20 +171,78 @@ class ReportController extends Controller
         return $report;
     }
 
-
+    /**
+     * Export yearly
+     * @param String $type
+     * @param int $year
+     * @return bool|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
     public function exportYearly(String $type, int $year) {
         if($type != 'purchase' && $type != 'sales'){
             abort(404);
         }
 
         //Composes the report
-        $report = $this->composesYearlyTransactionReport($type, $year);
-
+        $report = $this->transformExcelReport($this->composesYearlyTransactionReport($type, $year));
         try {
-            return (new YearlyReport($report))->download('Yearly.xlsx');
+            return (new YearlyReport($report))->download('Year ' . $year . ' Report.xlsx');
         }catch (\Exception $e) {
-            dd($e);
+            return back()->withErrors('Error in exporting report (' . $e->getMessage() . ')');
         }
-        return false;
+    }
+
+    /**
+     * Export monthly report
+     * @param String $type
+     * @param int $month
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function exportMonthly(String $type, int $month) {
+        if($type != 'purchase' && $type != 'sales'){
+            abort(404);
+        }
+
+        //Composes the report
+        $report = $this->transformExcelReport($this->composesMonthlyTransactionReport($type, $month));
+        try {
+            return (new YearlyReport($report))->download('Month ' . $month . ' Report.xlsx');
+        }catch (\Exception $e) {
+            return back()->withErrors('Error in exporting report (' . $e->getMessage() . ')');
+        }
+    }
+
+    /**
+     * Transform from web report to excel report
+     * @param Collection $report
+     * @return Collection
+     */
+    private function transformExcelReport(Collection $report) : Collection {
+        $report_excel = Collection::make([]);
+
+        foreach($report as $report_singular) {
+            $report_excel_singular = new ReportExcel();
+
+            $report_excel_singular->setPrice($report_singular->price);
+            $report_excel_singular->setDiscount(StringUtil::formatMoney($this->currency, $report_singular->discount));
+            $report_excel_singular->setQuantity($report_singular->quantity);
+
+            $total          = $report_singular->quantity * ($report_singular->price - $report_singular->discount);
+            $tax_base       = $total / 1.1;
+            $tax            = $total - $tax_base;
+
+            $report_excel_singular->setTotal(StringUtil::formatMoney($this->currency, $total));
+            $report_excel_singular->setVAT(StringUtil::formatMoney($this->currency, $tax));
+            $report_excel_singular->setTaxBase(StringUtil::formatMoney($this->currency, $tax_base));
+            $report_excel_singular->setProductName($report_singular->product_name);
+            $report_excel_singular->setTaxInvoiceId($report_singular->tax_invoice_id);
+            $report_excel_singular->setInvoiceId($report_singular->invoice_id);
+            $report_excel_singular->setDate($report_singular->date);
+            $report_excel_singular->setTaxInvoiceCreditedDate($report_singular->tax_invoice->credited_date);
+            $report_excel_singular->setTaxInvoiceDate($report_singular->tax_invoice->id);
+            $report_excel_singular->setTaxInvoiceNo($report_singular->tax_invoice->tax_invoice_no);
+
+            $report_excel->add($report_excel_singular);
+        }
+        return $report_excel;
     }
 }

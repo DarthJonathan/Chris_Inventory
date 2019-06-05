@@ -49,7 +49,7 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a class='sidebar-link' href="/report/monthly/purchase">Monthly Purcases</a>
+                        <a class='sidebar-link' href="/report/monthly/purchase">Monthly Purchases</a>
                     </li>
                     <li>
                         <a class='sidebar-link' href="/report/yearly/purchase">Yearly Purchases</a>

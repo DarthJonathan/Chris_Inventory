@@ -328,6 +328,8 @@ $(document).ready(function() {
                 .ajax
                 .url("/report/yearly/datatables/" + $("#yearlyReportTable").data('type') + "/" + $("#year").val())
                 .load();
+
+        $('#export-excel').attr('href', '/report/export/yearly/' + $('#export-excel').data('type') + '/' + $('#year').val());
     });
 
     if($('#year')) {
@@ -438,6 +440,8 @@ $(document).ready(function() {
             .ajax
             .url("/report/monthly/datatables/" + $("#monthlyReportTable").data('type') + "/" + $("#month").val())
             .load();
+
+        $('#export-excel').attr('href', '/report/export/monthly/' + $('#export-excel').data('type') + '/' + $('#month').val());
     });
 
     if($('#month')) {
