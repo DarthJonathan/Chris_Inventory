@@ -9,7 +9,10 @@ use App\Helpers\StringUtil;
 use App\TaxInvoice;
 use App\Transaction;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
@@ -244,5 +247,19 @@ class ReportController extends Controller
             $report_excel->add($report_excel_singular);
         }
         return $report_excel;
+    }
+
+    /**
+     * Import View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function importReportView () {
+        return view('reports.import');
+    }
+
+    public function importReport (Request $req) {
+        $import = $req->file('import');
+        dd($import);
+        $array = Excel::toCollection(new ReportExcel, $req->import->path());
     }
 }

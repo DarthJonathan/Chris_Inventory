@@ -1,7 +1,9 @@
 <?php
 namespace App\Datamodels;
 
-class ReportExcel
+use Illuminate\Database\Eloquent\Model;
+
+class ReportExcel extends Model
 {
     public $date;
     public $invoice_id;

@@ -95,3 +95,8 @@ Route::prefix('report')->group(function(){
        Route::get('/monthly/{type}/{year}', 'ReportController@exportMonthly');
     });
 });
+
+Route::prefix('import')->group(function() {
+   Route::get('/', 'ReportController@importReportView');
+   Route::post('/', 'ReportController@importReport');
+});
