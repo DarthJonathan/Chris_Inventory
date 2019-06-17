@@ -337,7 +337,6 @@ class ReportController extends Controller
             $reports->add($report);
         }
 
-        dd($reports);
-        return view('reports.uploaded', $reports);
+        return view('reports.uploaded', ['reports' => $reports]);
     }
 }
