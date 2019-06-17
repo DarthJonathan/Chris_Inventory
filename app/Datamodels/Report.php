@@ -11,6 +11,7 @@ class Report
     public $discount;
     public $price;
     public $tax_invoice;
+    public $customer;
 
     /**
      * @return mixed
@@ -138,6 +139,22 @@ class Report
     public function setTaxInvoice($tax_invoice): void
     {
         $this->tax_invoice = $tax_invoice;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomer()
+    {
+        return $this->customer;
+    }
+
+    /**
+     * @param mixed $customer
+     */
+    public function setCustomer($customer): void
+    {
+        $this->customer = $customer;
     }
 }
 

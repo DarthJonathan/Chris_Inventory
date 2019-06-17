@@ -10,7 +10,6 @@ use App\TaxInvoice;
 use App\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -257,9 +256,34 @@ class ReportController extends Controller
         return view('reports.import');
     }
 
+
     public function importReport (Request $req) {
         $import = $req->file('import');
-        dd($import);
-        $array = Excel::toCollection(new ReportExcel, $req->import->path());
+        $array = Excel::load($import, function($reader) {
+            $reader->calculate();
+        })->toArray();
+
+        $reports = new Collection();
+
+        foreach($array as $item) {
+            $report = new Report();
+
+            $report->setDate($item['date']);
+            $report->setInvoiceId($item['invoice_no.']);
+            $report->setProductName($item['product_name']);
+            $report->setQuantity($item['quantity']);
+            $report->setDiscount($item['discount_incl._vat']);
+            $report->setPrice($item['price_incl._vat']);
+            $report->setCustomer($item['customer_name']);
+
+            //No taxes
+            $report->setTaxInvoice(null);
+            $report->setTaxInvoiceId(null);
+
+            $reports->add($report);
+        }
+
+        dd($reports);
+        return view('reports.uploaded', $reports);
     }
 }
