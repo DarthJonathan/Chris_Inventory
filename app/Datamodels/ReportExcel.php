@@ -1,9 +1,7 @@
 <?php
 namespace App\Datamodels;
 
-use Illuminate\Database\Eloquent\Model;
-
-class ReportExcel extends Model
+class ReportExcel extends Serializable
 {
     public $date;
     public $invoice_id;
@@ -18,6 +16,7 @@ class ReportExcel extends Model
     public $total;
     public $tax_base;
     public $VAT;
+    public $customer;
 
     /**
      * @return mixed
@@ -225,5 +224,21 @@ class ReportExcel extends Model
     public function setVAT($VAT): void
     {
         $this->VAT = $VAT;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomer()
+    {
+        return $this->customer;
+    }
+
+    /**
+     * @param mixed $customer
+     */
+    public function setCustomer($customer): void
+    {
+        $this->customer = $customer;
     }
 }

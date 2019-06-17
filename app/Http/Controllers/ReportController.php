@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Datamodels\Report;
 use App\Datamodels\ReportExcel;
 use App\Excel\YearlyReport;
+use App\Helpers\CustomersUtil;
 use App\Helpers\StringUtil;
 use App\TaxInvoice;
 use App\Transaction;
@@ -89,18 +90,21 @@ class ReportController extends Controller
 
         foreach($purchases as $purchase) {
             foreach($purchase->purchases as $item) {
-                $report_new = new \stdClass();
+                $report_new = new Report();
 
-                $report_new->date           = $purchase->transaction_date;
-                $report_new->invoice_id     = $purchase->invoice_id;
-                $report_new->tax_invoice_id = $purchase->tax_invoice_id;
-                $report_new->product_name   = $item->product->product_name;
-                $report_new->quantity       = $item->quantity;
-                $report_new->discount       = $item->discount;
-                $report_new->price          = $item->price;
+                $report_new->setDate($purchase->transaction_date);
+                $report_new->setInvoiceId($purchase->invoice_id);
+                $report_new->setTaxInvoiceId($purchase->tax_invoice_id);
+                $report_new->setProductName($item->product->product_name);
+                $report_new->setQuantity($item->quantity);
+                $report_new->setDiscount($item->discount);
+                $report_new->setPrice($item->price);
+
+                $customer = CustomersUtil::getCustomerName($purchase->customer_id);
+                $report_new->setCustomer($customer);
 
                 //Tax Invoice
-                $taxInvoice = new \stdClass();
+                $taxInvoice = new \App\Datamodels\TaxInvoice();
                 $loadedTaxInvoice = TaxInvoice::find($purchase->tax_invoice_id);
 
                 if($loadedTaxInvoice == null) {
@@ -115,7 +119,7 @@ class ReportController extends Controller
                     $taxInvoice->id = $purchase->tax_invoice_id;
                 }
 
-                $report_new->tax_invoice = $taxInvoice;
+                $report_new->setTaxInvoice($taxInvoice);
                 $report->add($report_new);
             }
         }
@@ -148,6 +152,9 @@ class ReportController extends Controller
                 $report_new->setQuantity($item->quantity);
                 $report_new->setDiscount($item->discount);
                 $report_new->setPrice($item->price);
+
+                $customer = CustomersUtil::getCustomerName($purchase->customer_id);
+                $report_new->setCustomer($customer);
 
                 //Tax Invoice
                 $taxInvoice = new \App\Datamodels\TaxInvoice();
@@ -185,9 +192,23 @@ class ReportController extends Controller
         }
 
         //Composes the report
-        $report = $this->transformExcelReport($this->composesYearlyTransactionReport($type, $year));
+        $report = $this->reportsToArray(
+                        $this->transformExcelReport(
+                            $this->composesYearlyTransactionReport($type, $year)
+                        )
+                    );
         try {
-            return (new YearlyReport($report))->download('Year ' . $year . ' Report.xlsx');
+            return Excel::create('Year ' . $year . ' Report', function($excel) use ($report, $type) {
+                // Set the spreadsheet title, creator, and description
+                $excel->setTitle($type . ' Report');
+//                $excel->setCreator('Laravel')->setCompany('WJ Gilmore, LLC');
+//                $excel->setDescription('payments file');
+
+                // Build the spreadsheet, passing in the payments array
+                $excel->sheet(ucfirst($type) . ' Report', function($sheet) use ($report) {
+                    $sheet->fromArray($report, null, 'A1', false, false);
+                });
+            })->download('xlsx');
         }catch (\Exception $e) {
             return back()->withErrors('Error in exporting report (' . $e->getMessage() . ')');
         }
@@ -205,9 +226,23 @@ class ReportController extends Controller
         }
 
         //Composes the report
-        $report = $this->transformExcelReport($this->composesMonthlyTransactionReport($type, $month));
+        $report = $this->reportsToArray(
+                        $this->transformExcelReport(
+                            $this->composesMonthlyTransactionReport($type, $month)
+                        )
+                    );
         try {
-            return (new YearlyReport($report))->download('Month ' . $month . ' Report.xlsx');
+            return Excel::create('Month ' . $month . ' Report', function($excel) use ($report, $type) {
+                // Set the spreadsheet title, creator, and description
+                $excel->setTitle($type . ' Report');
+//                $excel->setCreator('Laravel')->setCompany('WJ Gilmore, LLC');
+//                $excel->setDescription('payments file');
+
+                // Build the spreadsheet, passing in the payments array
+                $excel->sheet(ucfirst($type) . ' Report', function($sheet) use ($report) {
+                    $sheet->fromArray($report, null, 'A1', false, false);
+                });
+            })->download('xlsx');
         }catch (\Exception $e) {
             return back()->withErrors('Error in exporting report (' . $e->getMessage() . ')');
         }
@@ -242,10 +277,29 @@ class ReportController extends Controller
             $report_excel_singular->setTaxInvoiceCreditedDate($report_singular->tax_invoice->credited_date);
             $report_excel_singular->setTaxInvoiceDate($report_singular->tax_invoice->id);
             $report_excel_singular->setTaxInvoiceNo($report_singular->tax_invoice->tax_invoice_no);
+            $report_excel_singular->setCustomer($report_singular->customer);
 
             $report_excel->add($report_excel_singular);
         }
         return $report_excel;
+    }
+
+    /**
+     * Morph reports from ReportExcel to array
+     * @param Collection $excelReports
+     * @return Collection
+     */
+    private function reportsToArray(Collection $excelReports) : Collection {
+        $reports = new Collection();
+        foreach($excelReports as $report) {
+            $reports->add($report->toArray());
+        }
+
+        //Gets the attribute of class
+        $report = new ReportExcel();
+        $reports->prepend($report->getAttributes());
+
+        return $reports;
     }
 
     /**
