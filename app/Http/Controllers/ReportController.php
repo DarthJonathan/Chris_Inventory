@@ -12,6 +12,7 @@ use App\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
@@ -310,8 +311,17 @@ class ReportController extends Controller
         return view('reports.import');
     }
 
-
+    /**
+     * Uploaded file preview
+     * @param Request $req
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function importReport (Request $req) {
+        $req->validate([
+            'type'      => 'required',
+            'import'    => 'required|mimes:xls,xlsx,xlsm'
+        ]);
+
         $import = $req->file('import');
         $array = Excel::load($import, function($reader) {
             $reader->calculate();
@@ -319,24 +329,70 @@ class ReportController extends Controller
 
         $reports = new Collection();
 
-        foreach($array as $item) {
-            $report = new Report();
+        if($req->type == "sales") {
+            foreach ($array as $item) {
+                $report = new Report();
 
-            $report->setDate($item['date']);
-            $report->setInvoiceId($item['invoice_no.']);
-            $report->setProductName($item['product_name']);
-            $report->setQuantity($item['quantity']);
-            $report->setDiscount($item['discount_incl._vat']);
-            $report->setPrice($item['price_incl._vat']);
-            $report->setCustomer($item['customer_name']);
+                $report->setDate($item['date']);
+                $report->setInvoiceId($item['invoice_no.']);
+                $report->setProductName($item['product_name']);
+                $report->setQuantity($item['quantity']);
+                $report->setDiscount($item['discount_incl._vat']);
+                $report->setPrice($item['price_incl._vat']);
+                $report->setCustomer($item['customer_name']);
 
-            //No taxes
-            $report->setTaxInvoice(null);
-            $report->setTaxInvoiceId(null);
+                //No taxes
+                $report->setTaxInvoice(null);
+                $report->setTaxInvoiceId(null);
 
-            $reports->add($report);
+                $reports->add($report);
+            }
+        }else {
+            foreach ($array as $item) {
+                $report = new Report();
+
+                $report->setDate($item['date']);
+                $report->setInvoiceId($item['invoice_no.']);
+                $report->setProductName($item['product_name']);
+                $report->setQuantity($item['quantity']);
+                $report->setPrice($item['price_incl._vat']);
+                $report->setDiscount($item['discount_incl._vat']);
+                $report->setCustomer($item['price_excl._vat']);
+                $report->setCustomer($item['total_hpp_excl._vat']);
+                $report->setCustomer($item['total_discount_excl._vat']);
+                $report->setCustomer($item['tax_base']);
+                $report->setCustomer($item['vat']);
+                $report->setCustomer($item['difference']);
+                $report->setCustomer($item['tax_invoice_no']);
+                $report->setCustomer($item['tax_invoice_date']);
+                $report->setCustomer($item['credited_in_vat_period']);
+                $report->setCustomer($item['depo']);
+                $report->setCustomer($item['no_kendaraan']);
+                $report->setCustomer($item['driver']);
+                $report->setCustomer($item['payment']);
+                $report->setCustomer($item['date']);
+
+                //No taxes
+                $report->setTaxInvoice(null);
+                $report->setTaxInvoiceId(null);
+
+                $reports->add($report);
+            }
         }
 
+        //Store the reports in session
+        Session::put('uploaded_report', $reports);
+        Session::put('report_type', $req->type);
+
         return view('reports.uploaded', ['reports' => $reports]);
+    }
+
+    public function handleImportToDatabase() {
+        $imports    = Session::get('uploaded_report');
+        $type       = Session::get('report_type');
+
+
+
+        dd($imports);
     }
 }

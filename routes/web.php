@@ -99,4 +99,5 @@ Route::prefix('report')->group(function(){
 Route::prefix('import')->group(function() {
    Route::get('/', 'ReportController@importReportView');
    Route::post('/', 'ReportController@importReport');
+   Route::post('/save', 'ReportController@handleImportToDatabase');
 });

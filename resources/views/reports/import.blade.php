@@ -8,8 +8,16 @@
     </div>
     <div class="row justify-content-center">
         <div class="col-lg-6">
+            <h2>Import</h2>
             <form action="/import" method="post" enctype="multipart/form-data">
                 {{ csrf_field() }}
+                <div class="form-group">
+                    <label for="type">Type</label>
+                    <select class="custom-select" id="type" name="type">
+                        <option value="sales">Sales</option>
+                        <option value="purchases">Purchases</option>
+                    </select>
+                </div>
                 <div class="custom-file">
                     <input type="file" name="import" class="custom-file-input" id="import">
                     <label class="custom-file-label" for="import">Choose file</label>
