@@ -2,10 +2,10 @@
 
 @section('content')
     <div class="row">
-        <div class="col-lg-10">
+        <div class="col-lg-10 pl-3">
             <h2 class="c-grey-900 mT-10 mB-30">Uploaded Report Preview</h2>
         </div>
-        <div class="col-lg-2">
+        <div class="col-lg-2 d-flex justify-content-end align-items-center pr-3">
             <form action="/import/save" method="post" enctype="multipart/form-data">
                 @csrf
                 <button class="btn btn-primary">Import</button>

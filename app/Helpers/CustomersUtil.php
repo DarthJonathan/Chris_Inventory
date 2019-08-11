@@ -6,12 +6,20 @@ use App\Customers;
 
 class CustomersUtil
 {
-    public static function findCustomer(String $customer) {
+    /**
+     * Find customer by name
+     * @param $customer
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model Customer Model
+     */
+    public static function findCustomer($customer) {
         //Remove every stuff
         str_replace(['.', ','], ' ', $customer);
-
-        $searchTerm = explode(" ", $customer);
-
+        $searchTerms = explode(" ", $customer);
+        $query = Customers::query();
+        foreach($searchTerms as $searchTerm) {
+            $query->orWhere('name', 'like', '%' . $searchTerm . '%');
+        }
+        return $query->first();
     }
 
     /**

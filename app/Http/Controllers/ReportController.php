@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Customers;
 use App\Datamodels\Report;
 use App\Datamodels\ReportExcel;
 use App\Excel\YearlyReport;
 use App\Helpers\CustomersUtil;
+use App\Helpers\ProductUtil;
+use App\Helpers\Queue;
 use App\Helpers\StringUtil;
+use App\Products;
+use App\Sales;
 use App\TaxInvoice;
 use App\Transaction;
 use Carbon\Carbon;
@@ -387,12 +392,91 @@ class ReportController extends Controller
         return view('reports.uploaded', ['reports' => $reports]);
     }
 
+
     public function handleImportToDatabase() {
         $imports    = Session::get('uploaded_report');
         $type       = Session::get('report_type');
 
+        foreach($imports as $import) {
+            $imported_customer_name = CustomersUtil::findCustomer($import->getCustomer());
+            $imported_item_name = ProductUtil::findProduct($import->getProductName());
 
+            //if null then create new record
+            if($imported_item_name == null) {
+                $newProduct = new Products();
+                $newProduct->product_name = $import->getProductName();
+                $newProduct->description = $import->getProductName();
+                $newProduct->stock = 0;
+                $newProduct->queue_stock = 0;
+                $newProduct->queue_id = 0;
+                $newProduct->is_active = true;
+                $newProduct->save();
+            }
+
+            if($imported_customer_name == null) {
+                $newCustomer = new Customers();
+                $newCustomer->name = $import->getCustomer();
+                $newCustomer->is_active = true;
+                $newCustomer->save();
+            }
+
+            if($type == 'sales')
+                $this->importSales($import);
+            else
+                $this->importSales($import);
+        }
+
+        echo $type;
 
         dd($imports);
+    }
+
+    private function importSales(Report $report) {
+        try {
+            //TODO check if transaction exists
+            $transaction = new Transaction();
+            $transaction->type = "Sales";
+            $transaction->invoice_id = $report->getInvoiceId();
+            $transaction->transaction_date = $report->getDate();
+            $transaction->save();
+
+            $tax_invoice = null;
+
+            if($report->getCustomer() != null) {
+                $customer = CustomersUtil::findCustomer($report->getCustomer());
+                $transaction->customer_id = $customer != null ? $customer->id : null;
+            }
+
+            $sale = new Sales();
+            $sale->transaction_id = $transaction->id;
+            $sale->price = $report->getPrice();
+
+            if($report->getCustomer() != null) {
+                $customer = CustomersUtil::findCustomer($report->getCustomer());
+                $transaction->customer_id = $customer != null ? $customer->id : null;
+            }
+
+            if($report->getProductName() != null) {
+                $product = $report->getProductName();
+                $product = ProductUtil::findProduct($product);
+                $sale->product_id = $product != null ? $product->id : null;
+            }
+
+            $sale->discount = $report->getDiscount();
+            $sale->quantity = $report->getQuantity();
+            $sale->sales_date = $report->getDate();
+
+            $sale->save();
+
+            //Changes the stock and average price
+            $inventory = Products::find($sale->product_id);
+            Queue::takeoutItems($inventory, $sale->quantity);
+            $inventory->save();
+
+            return redirect('/sales')->with('success', 'Success adding new sale data');
+        }catch(\Exception $e) {
+            dd($e->getMessage());
+            return back()->withErrors("Error creating new record (Error : " . $e->getMessage() . " )");
+        }
     }
 }

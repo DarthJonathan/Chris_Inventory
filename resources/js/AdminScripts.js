@@ -112,6 +112,9 @@ $(document).ready(function() {
         }
     });
 
+    //Imported data table
+    var importedData = $('#uploadedReportTable').DataTable();
+
     //Sales Table
     var salesTable = $('#salesTable').DataTable({
         "processing": true,
@@ -261,7 +264,7 @@ $(document).ready(function() {
             },
             {
                 data: {
-                    quantity: 'quantity', 
+                    quantity: 'quantity',
                     price: 'price',
                     discount: 'discount'
                 },
