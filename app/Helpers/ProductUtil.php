@@ -2,7 +2,6 @@
 
 namespace App\Helpers;
 
-use App\Customers;
 use App\Products;
 
 class ProductUtil

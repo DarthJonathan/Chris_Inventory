@@ -7,9 +7,11 @@ use App\Datamodels\Report;
 use App\Datamodels\ReportExcel;
 use App\Excel\YearlyReport;
 use App\Helpers\CustomersUtil;
+use App\Helpers\InventoryLogger;
 use App\Helpers\ProductUtil;
 use App\Helpers\Queue;
 use App\Helpers\StringUtil;
+use App\InventoryLog;
 use App\Products;
 use App\Sales;
 use App\TaxInvoice;
@@ -19,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Datamodels\CommonEnums;
 
 class ReportController extends Controller
 {
@@ -392,7 +395,9 @@ class ReportController extends Controller
         return view('reports.uploaded', ['reports' => $reports]);
     }
 
-
+    /**
+     * Handle the import to the database
+     */
     public function handleImportToDatabase() {
         $imports    = Session::get('uploaded_report');
         $type       = Session::get('report_type');
@@ -423,7 +428,7 @@ class ReportController extends Controller
             if($type == 'sales')
                 $this->importSales($import);
             else
-                $this->importSales($import);
+                $this->importPurchase($import);
         }
 
         echo $type;
@@ -431,14 +436,86 @@ class ReportController extends Controller
         dd($imports);
     }
 
+    /**
+     * Import the purchases
+     * @param Report $report
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    private function importPurchase (Report $report) {
+        try {
+            $transaction = Transaction::where('type', CommonEnums::PURCHASE())
+                ->where('invoice_id', $report->getInvoiceId())
+                ->where('transaction_date', $report->getDate)
+                ->first();
+
+            if($transaction == null) {
+                $transaction = new Transaction();
+                $transaction->type = CommonEnums::PURCHASE();
+                $transaction->invoice_id = $report->getInvoiceId();
+                $transaction->transaction_date = $report->getDate();
+                $transaction->save();
+            }
+
+            $tax_invoice = null;
+
+            if($report->getCustomer() != null) {
+                $customer = CustomersUtil::findCustomer($report->getCustomer());
+                $transaction->customer_id = $customer != null ? $customer->id : null;
+            }
+
+            $sale = new Sales();
+            $sale->transaction_id = $transaction->id;
+            $sale->price = $report->getPrice();
+
+            if($report->getCustomer() != null) {
+                $customer = CustomersUtil::findCustomer($report->getCustomer());
+                $transaction->customer_id = $customer != null ? $customer->id : null;
+            }
+
+            if($report->getProductName() != null) {
+                $product = $report->getProductName();
+                $product = ProductUtil::findProduct($product);
+                $sale->product_id = $product != null ? $product->id : null;
+            }
+
+            $sale->discount = $report->getDiscount();
+            $sale->quantity = $report->getQuantity();
+            $sale->sales_date = $report->getDate();
+
+            $sale->save();
+
+            //Changes the stock and average price
+            $inventory = Products::find($sale->product_id);
+            Queue::putInItemsIn($inventory, $sale->quantity);
+            $inventory->save();
+
+            //Save the inventory to log
+            InventoryLogger::saveNewLog($inventory, $transaction);
+
+        }catch(\Exception $e) {
+            return back()->withErrors("Error creating new record (Error : " . $e->getMessage() . " )");
+        }
+    }
+
+    /**
+     * Import the sales
+     * @param Report $report
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     private function importSales(Report $report) {
         try {
-            //TODO check if transaction exists
-            $transaction = new Transaction();
-            $transaction->type = "Sales";
-            $transaction->invoice_id = $report->getInvoiceId();
-            $transaction->transaction_date = $report->getDate();
-            $transaction->save();
+            $transaction = Transaction::where('type', CommonEnums::SALES())
+                            ->where('invoice_id', $report->getInvoiceId())
+                            ->where('transaction_date', $report->getDate)
+                            ->first();
+
+            if($transaction == null) {
+                $transaction = new Transaction();
+                $transaction->type = CommonEnums::SALES();
+                $transaction->invoice_id = $report->getInvoiceId();
+                $transaction->transaction_date = $report->getDate();
+                $transaction->save();
+            }
 
             $tax_invoice = null;
 
@@ -473,9 +550,10 @@ class ReportController extends Controller
             Queue::takeoutItems($inventory, $sale->quantity);
             $inventory->save();
 
-            return redirect('/sales')->with('success', 'Success adding new sale data');
+            //Save the inventory to log
+            InventoryLogger::saveNewLog($inventory, $transaction);
+
         }catch(\Exception $e) {
-            dd($e->getMessage());
             return back()->withErrors("Error creating new record (Error : " . $e->getMessage() . " )");
         }
     }
