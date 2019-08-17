@@ -365,24 +365,20 @@ class ReportController extends Controller
                 $report->setQuantity($item['quantity']);
                 $report->setPrice($item['price_incl._vat']);
                 $report->setDiscount($item['discount_incl._vat']);
-                $report->setCustomer($item['price_excl._vat']);
-                $report->setCustomer($item['total_hpp_excl._vat']);
-                $report->setCustomer($item['total_discount_excl._vat']);
-                $report->setCustomer($item['tax_base']);
-                $report->setCustomer($item['vat']);
-                $report->setCustomer($item['difference']);
-                $report->setCustomer($item['tax_invoice_no']);
-                $report->setCustomer($item['tax_invoice_date']);
-                $report->setCustomer($item['credited_in_vat_period']);
-                $report->setCustomer($item['depo']);
-                $report->setCustomer($item['no_kendaraan']);
-                $report->setCustomer($item['driver']);
-                $report->setCustomer($item['payment']);
-                $report->setCustomer($item['date']);
 
-                //No taxes
-                $report->setTaxInvoice(null);
-                $report->setTaxInvoiceId(null);
+                $taxInvoice = new TaxInvoice();
+                $taxInvoice->invoice_no = $item['tax_invoice_no'];
+                $taxInvoice->date = $item['tax_invoice_date'];
+                $taxInvoice->used = Carbon::locale('id')->createFromFormat('MMMM YYYY', 'credited_in_vat_period');
+                $taxInvoice->is_active = true;
+                $taxInvoice->save();
+
+                $report->setTax($taxInvoice->id);
+
+//                $report->setCustomer($item['depo']);
+//                $report->setCustomer($item['no_kendaraan']);
+//                $report->setCustomer($item['driver']);
+//                $report->setCustomer($item['payment']);
 
                 $reports->add($report);
             }
