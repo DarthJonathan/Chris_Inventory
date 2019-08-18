@@ -12,7 +12,6 @@ use App\Helpers\InventoryLogger;
 use App\Helpers\ProductUtil;
 use App\Helpers\Queue;
 use App\Helpers\StringUtil;
-use App\InventoryLog;
 use App\Products;
 use App\Purchase;
 use App\Sales;
@@ -444,7 +443,7 @@ class ReportController extends Controller
                 $this->importPurchase($import);
         }
 
-        dd($imports);
+        return redirect('/import')->with('success', 'Importing success');
     }
 
     /**
@@ -456,10 +455,8 @@ class ReportController extends Controller
         try {
             $transaction = Transaction::where('type', CommonEnums::PURCHASE())
                 ->where('invoice_id', $report->getInvoiceId())
-                ->where('transaction_date', $report->getDate)
+                ->where('transaction_date', $report->getDate())
                 ->first();
-
-            dd($transaction == null);
 
             if($transaction == null) {
                 $transaction = new Transaction();
@@ -493,7 +490,6 @@ class ReportController extends Controller
 
             $purchase->discount = $report->getDiscount();
             $purchase->quantity = $report->getQuantity();
-            $purchase->sales_date = $report->getDate();
 
             $purchase->save();
 
@@ -519,7 +515,7 @@ class ReportController extends Controller
         try {
             $transaction = Transaction::where('type', CommonEnums::SALES())
                             ->where('invoice_id', $report->getInvoiceId())
-                            ->where('transaction_date', $report->getDate)
+                            ->where('transaction_date', $report->getDate())
                             ->first();
 
             if($transaction == null) {

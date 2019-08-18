@@ -37,6 +37,14 @@
                     <span class="title">Dashboard</span>
                 </a>
             </li>
+            <li class="nav-item active">
+                <a class="sidebar-link" href="/invoice/new">
+                <span class="icon-holder">
+                  <i class="c-black-500 ti-bookmark-alt"></i>
+                </span>
+                    <span class="title">Generate Invoice</span>
+                </a>
+            </li>
             <li class="nav-item dropdown">
                 <a class="dropdown-toggle" href="javascript:void(0);">
                     <span class="icon-holder">
@@ -106,7 +114,7 @@
             <li class="nav-item active">
                 <a class="sidebar-link" href="/products">
                 <span class="icon-holder">
-                  <i class="c-blue-500 ti-home"></i>
+                  <i class="c-amber-500 ti-bag"></i>
                 </span>
                     <span class="title">Inventory</span>
                 </a>
@@ -114,7 +122,7 @@
             <li class="nav-item active">
                 <a class="sidebar-link" href="/customers">
                 <span class="icon-holder">
-                  <i class="c-blue-500 ti-home"></i>
+                  <i class="c-teal-500 ti-user"></i>
                 </span>
                     <span class="title">Customers</span>
                 </a>
@@ -122,7 +130,7 @@
             <li class="nav-item active">
                 <a class="sidebar-link" href="/import">
                 <span class="icon-holder">
-                  <i class="c-blue-500 ti-home"></i>
+                  <i class="r-deep-orange-500 ti-export"></i>
                 </span>
                     <span class="title">Import</span>
                 </a>
