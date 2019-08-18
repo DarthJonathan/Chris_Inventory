@@ -1,7 +1,9 @@
 var taxInvoiceTable;
 var customerTable;
+var bsCustomFileInput = require('bs-custom-file-input');
 
 $(document).ready(function() {
+    bsCustomFileInput.init();
     //Product page
     var productsTable = $('#productsOverview').DataTable({
         "processing": true,

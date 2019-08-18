@@ -6,6 +6,7 @@ use App\Customers;
 use App\Datamodels\Report;
 use App\Datamodels\ReportExcel;
 use App\Excel\YearlyReport;
+use App\Helpers\CarbonHelper;
 use App\Helpers\CustomersUtil;
 use App\Helpers\InventoryLogger;
 use App\Helpers\ProductUtil;
@@ -13,6 +14,7 @@ use App\Helpers\Queue;
 use App\Helpers\StringUtil;
 use App\InventoryLog;
 use App\Products;
+use App\Purchase;
 use App\Sales;
 use App\TaxInvoice;
 use App\Transaction;
@@ -366,14 +368,29 @@ class ReportController extends Controller
                 $report->setPrice($item['price_incl._vat']);
                 $report->setDiscount($item['discount_incl._vat']);
 
-                $taxInvoice = new TaxInvoice();
-                $taxInvoice->invoice_no = $item['tax_invoice_no'];
-                $taxInvoice->date = $item['tax_invoice_date'];
-                $taxInvoice->used = Carbon::locale('id')->createFromFormat('MMMM YYYY', 'credited_in_vat_period');
-                $taxInvoice->is_active = true;
-                $taxInvoice->save();
+                if(array_key_exists('tax_invoice_no.', $item)) {
+                    $taxInvoice = new TaxInvoice();
+                    $taxInvoice->invoice_no = $item['tax_invoice_no.'];
 
-                $report->setTax($taxInvoice->id);
+                    //If it's already credited
+                    if($item['credited_in_vat_period'] != null) {
+                        $taxInvoice->date = $item['tax_invoice_date'];
+                        $taxInvoice->credited = Carbon::parse(CarbonHelper::replaceMonthToEnglish($item['credited_in_vat_period']));
+                        $taxInvoice->used = true;
+                    }else {
+                        $taxInvoice->date = null;
+                        $taxInvoice->credited = null;
+                        $taxInvoice->used = false;
+                    }
+
+                    $taxInvoice->is_active = true;
+
+                    $report->setTaxInvoice($taxInvoice);
+                    $report->setTaxInvoiceId($taxInvoice->id);
+                }else {
+                    $report->setTaxInvoiceId(null);
+                    $report->setTaxInvoice(null);
+                }
 
 //                $report->setCustomer($item['depo']);
 //                $report->setCustomer($item['no_kendaraan']);
@@ -427,8 +444,6 @@ class ReportController extends Controller
                 $this->importPurchase($import);
         }
 
-        echo $type;
-
         dd($imports);
     }
 
@@ -443,6 +458,8 @@ class ReportController extends Controller
                 ->where('invoice_id', $report->getInvoiceId())
                 ->where('transaction_date', $report->getDate)
                 ->first();
+
+            dd($transaction == null);
 
             if($transaction == null) {
                 $transaction = new Transaction();
@@ -459,9 +476,9 @@ class ReportController extends Controller
                 $transaction->customer_id = $customer != null ? $customer->id : null;
             }
 
-            $sale = new Sales();
-            $sale->transaction_id = $transaction->id;
-            $sale->price = $report->getPrice();
+            $purchase = new Purchase();
+            $purchase->transaction_id = $transaction->id;
+            $purchase->price = $report->getPrice();
 
             if($report->getCustomer() != null) {
                 $customer = CustomersUtil::findCustomer($report->getCustomer());
@@ -471,18 +488,18 @@ class ReportController extends Controller
             if($report->getProductName() != null) {
                 $product = $report->getProductName();
                 $product = ProductUtil::findProduct($product);
-                $sale->product_id = $product != null ? $product->id : null;
+                $purchase->product_id = $product != null ? $product->id : null;
             }
 
-            $sale->discount = $report->getDiscount();
-            $sale->quantity = $report->getQuantity();
-            $sale->sales_date = $report->getDate();
+            $purchase->discount = $report->getDiscount();
+            $purchase->quantity = $report->getQuantity();
+            $purchase->sales_date = $report->getDate();
 
-            $sale->save();
+            $purchase->save();
 
             //Changes the stock and average price
-            $inventory = Products::find($sale->product_id);
-            Queue::putInItemsIn($inventory, $sale->quantity);
+            $inventory = Products::find($purchase->product_id);
+            Queue::takeoutItems($inventory, $purchase->quantity);
             $inventory->save();
 
             //Save the inventory to log
