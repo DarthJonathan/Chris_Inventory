@@ -368,12 +368,19 @@ class ReportController extends Controller
                 $report->setDiscount($item['discount_incl._vat']);
 
                 if(array_key_exists('tax_invoice_no.', $item)) {
-                    $taxInvoice = new TaxInvoice();
-                    $taxInvoice->invoice_no = $item['tax_invoice_no.'];
+                    //Check if tax invoice exists
+                    $taxInvoice = TaxInvoice::where('invoice_no', $item['tax_invoice_no.'])
+                        ->first();
+
+                    if($taxInvoice == null) {
+                        $taxInvoice = new TaxInvoice();
+                        $taxInvoice->invoice_no = $item['tax_invoice_no.'];
+                    }
+
+                    $taxInvoice->date = $item['tax_invoice_date'];
 
                     //If it's already credited
                     if($item['credited_in_vat_period'] != null) {
-                        $taxInvoice->date = $item['tax_invoice_date'];
                         $taxInvoice->credited = Carbon::parse(CarbonHelper::replaceMonthToEnglish($item['credited_in_vat_period']));
                         $taxInvoice->used = true;
                     }else {

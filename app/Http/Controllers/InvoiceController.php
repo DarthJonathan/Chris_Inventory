@@ -10,7 +10,7 @@ class InvoiceController extends Controller
         return view('invoice.invoice');
     }
 
-    public function exportInvoice() {
+    public function exportInvoice(Request $request) {
 
     }
 }
