@@ -11,6 +11,6 @@ class InvoiceController extends Controller
     }
 
     public function exportInvoice(Request $request) {
-
+        return view('invoice.template');
     }
 }

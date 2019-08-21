@@ -102,6 +102,6 @@ Route::middleware('auth')->group(function() {
 
     Route::prefix('invoice')->group(function() {
         Route::get('/new', 'InvoiceController@newInvoice');
-        Route::post('/export', 'InvoiceController@exportInvoice');
+        Route::post('/generate', 'InvoiceController@exportInvoice');
     });
 });

@@ -88,7 +88,7 @@
             @include('layouts.partials.navbar')
 
             <!-- ### $App Screen Content ### -->
-            <main class='main-content bgc-grey-100'>
+            <main class='main-content bgc-grey-100 container-fluid'>
                 {{--### Notifications ###--}}
                 @if($errors->all())
                     @foreach($errors->all() as $error)
