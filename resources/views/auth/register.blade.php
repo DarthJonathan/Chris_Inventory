@@ -1,8 +1,8 @@
 @extends('layouts.auth')
 
 @section('content')
-    <div class="container-fluid page-body-wrapper full-page-wrapper auth-page">
-        <div class="content-wrapper d-flex align-items-center auth register-bg-1 theme-one">
+    <div class="container-fluid page-body-wrapper d-flex align-items-center justify-content-center full-page-wrapper auth-page">
+        <div class="content-wrapper d-flex align-items-center justify-content-center auth register-bg-1 theme-one w-100">
             <div class="row w-100">
                 <div class="col-lg-12 mx-auto">
                     <h2 class="text-center mb-4">Register</h2>

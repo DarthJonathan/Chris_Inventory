@@ -2,19 +2,13 @@
 
 @section('content')
     <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-body row">
-                    <div class="col-md-8">
-                        <h1>Tax Invoices</h1>
-                    </div>
-                    <div class="col-md-4">
-                        <a href="{{ url('taxinvoices/new') }}" class="btn btn-primary float-right">
-                            New Tax Invoice
-                        </a>
-                    </div>
-                </div>
-            </div>
+        <div class="col-8">
+            <h1>Tax Invoices</h1>
+        </div>
+        <div class="col-4 d-flex justify-content-end align-items-center">
+            <a href="{{ url('taxinvoices/new') }}" class="btn btn-primary float-right">
+                New Tax Invoice
+            </a>
         </div>
     </div>
     <div class="row">

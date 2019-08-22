@@ -110,7 +110,7 @@
                     </div>
                 @endif
 
-                <div id='mainContent'>
+                <div id='mainContent' class="container-fluid">
                     @yield('content')
                 </div>
             </main>

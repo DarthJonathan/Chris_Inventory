@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="row">
-    <div class="col-lg-8">
-        <h2 class="c-grey-900 mT-10 mB-30">Purchases</h2>
+<div class="row mT-10 mB-30">
+    <div class="col-8 d-flex justify-content-start align-items-center">
+        <h2 class="c-grey-900">Purchases</h2>
     </div>
-    <div class="col-lg-4 text-right">
+    <div class="col-4 d-flex align-items-center justify-content-end text-right">
         <a href="{{ url('purchases/new') }}" class="btn btn-primary mt-2">
             New Purchase
         </a>
@@ -54,6 +54,6 @@
                 </table>
             </div>
         </div>
-    </div>  
+    </div>
 </div>
 @endsection

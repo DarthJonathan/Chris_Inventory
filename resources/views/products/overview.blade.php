@@ -1,11 +1,11 @@
  @extends('layouts.app')
 
  @section('content')
-     <div class="row">
-         <div class="col-md-8">
-             <h2 class="c-grey-900 mT-10 mB-30">Products</h2>
+     <div class="row mT-10 mB-30">
+         <div class="col-8 d-flex justify-content-start align-items-center">
+             <h2 class="c-grey-900">Products</h2>
          </div>
-         <div class="col-md-4 text-right">
+         <div class="col-4 d-flex align-items-center justify-content-end text-right">
              <a href="{{ url('products/new') }}" class="btn btn-primary float-right mt-1 mr-3">
                  New Product
              </a>
