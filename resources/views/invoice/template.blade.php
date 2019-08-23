@@ -64,7 +64,7 @@
         border-bottom: none;
     }
 
-    .invoice-box table tr.total td:nth-child(2) {
+    .invoice-box table tr.total td:nth-child(3) {
         border-top: 2px solid #eee;
         font-weight: bold;
     }
@@ -111,9 +111,9 @@
                             </td>
 
                             <td>
-                                Invoice #: 123<br>
-                                Created: January 1, 2015<br>
-                                Due: February 1, 2015
+                                Invoice #: {{ $invoice_id  }}<br>
+                                Created: {{ \Carbon\Carbon::now() }}<br>
+                                Due: {{ \Carbon\Carbon::now()->addDays(7)  }}
                             </td>
                         </tr>
                     </table>
@@ -125,38 +125,17 @@
                     <table>
                         <tr>
                             <td>
-                                Sparksuite, Inc.<br>
+                                PT. CHRISEDA MITRA PERKASA<br>
                                 12345 Sunny Road<br>
-                                Sunnyville, CA 12345
+                                Kelapa Gading, Jakarta Utara
                             </td>
 
                             <td>
-                                Acme Corp.<br>
-                                John Doe<br>
+                                Christoper Hambali<br>
                                 john@example.com
                             </td>
                         </tr>
                     </table>
-                </td>
-            </tr>
-
-            <tr class="heading">
-                <td>
-                    Payment Method
-                </td>
-
-                <td>
-                    Check #
-                </td>
-            </tr>
-
-            <tr class="details">
-                <td>
-                    Check
-                </td>
-
-                <td>
-                    1000
                 </td>
             </tr>
 
@@ -201,6 +180,7 @@
             </tr>
 
             <tr class="total">
+                <td></td>
                 <td></td>
 
                 <td>

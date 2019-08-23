@@ -6,12 +6,12 @@
                     <i class="ti-menu"></i>
                 </a>
             </li>
-            <li class="search-box">
-                <a class="search-toggle no-pdd-right" href="javascript:void(0);">
-                    <i class="search-icon ti-search pdd-right-10"></i>
-                    <i class="search-icon-close ti-close pdd-right-10"></i>
-                </a>
-            </li>
+{{--            <li class="search-box">--}}
+{{--                <a class="search-toggle no-pdd-right" href="javascript:void(0);">--}}
+{{--                    <i class="search-icon ti-search pdd-right-10"></i>--}}
+{{--                    <i class="search-icon-close ti-close pdd-right-10"></i>--}}
+{{--                </a>--}}
+{{--            </li>--}}
             <li class="search-input">
                 <input class="form-control" type="text" placeholder="Search...">
             </li>
@@ -200,18 +200,21 @@
                             <span>Profile</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="email.html" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
-                            <i class="ti-email mR-10"></i>
-                            <span>Messages</span>
-                        </a>
-                    </li>
+{{--                    <li>--}}
+{{--                        <a href="email.html" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">--}}
+{{--                            <i class="ti-email mR-10"></i>--}}
+{{--                            <span>Messages</span>--}}
+{{--                        </a>--}}
+{{--                    </li>--}}
                     <li role="separator" class="divider"></li>
                     <li>
-                        <a href="" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
-                            <i class="ti-power-off mR-10"></i>
-                            <span>Logout</span>
-                        </a>
+                        <form action="{{ url('logout') }}" class="pl-2 d-b td-n mt-2">
+                            @csrf
+                            <button class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                                <i class="ti-power-off mR-10"></i>
+                                <span>Logout</span>
+                            </button>
+                        </form>
                     </li>
                 </ul>
             </li>
