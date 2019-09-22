@@ -11,13 +11,13 @@
 |
 */
 
-Route::get('/', 'HomeController@index');
+Route::get('/', 'DashboardController@dashboard');
 
 //Auth::routes(['register' => false]);
 Auth::routes();
 
 Route::middleware('auth')->group(function() {
-    Route::get('/dashboard', 'HomeController@index')->name('dashboard');
+    Route::get('/dashboard', 'DashboardController@dashboard');
 
     Route::prefix('api/v1')->group(function(){
         Route::get('products', 'ApiController@getProducts');

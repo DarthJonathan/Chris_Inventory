@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Datamodels\InvoiceItem;
+use App\Helpers\InvoicePrinter;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -11,6 +12,8 @@ class InvoiceController extends Controller
      * New invoice page
      */
     public function newInvoice() {
+
+        return InvoicePrinter::generateInvoice();
         return view('invoice.invoice');
     }
 
@@ -32,6 +35,7 @@ class InvoiceController extends Controller
             'date'          => $request->date,
             'invoice_id'    => $request->invoice
         ];
-        return view('invoice.template', $data);
+
+        return InvoicePrinter::generateInvoice();
     }
 }

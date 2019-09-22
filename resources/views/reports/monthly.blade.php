@@ -13,7 +13,7 @@
             </div>
             <div class="col-md-8 d-flex align-items-center">
                 <select id="month" class="form-control">
-                    <option value="{{ (Carbon\Carbon::now()->month -1) }}">{{ Carbon\Carbon::now()->monthName . ' ' . Carbon\Carbon::now()->year }}</option>
+                    <option value="{{ (Carbon\Carbon::now()->month -1) }}">{{ Carbon\Carbon::now()->localeMonth . ' ' . Carbon\Carbon::now()->year }}</option>
                 </select>
             </div>
         </div>
