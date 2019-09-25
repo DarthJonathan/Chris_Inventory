@@ -8,15 +8,6 @@ use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
-    /**
-     * New invoice page
-     */
-    public function newInvoice() {
-
-        return InvoicePrinter::generateInvoice();
-        return view('invoice.invoice');
-    }
-
     public function exportInvoice(Request $request) {
         $sale = [];
 

@@ -16,3 +16,16 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::middleware('auth:api')->group(function() {
+    Route::prefix('/invoice')->group(function() {
+       Route::post('/new', 'InvoiceController@exportInvoice');
+    });
+
+    Route::prefix('/report')->group(function(){
+        Route::get('/yearly/{parameter}', 'ReportController@yearlyApi');
+        Route::get('/monthly/{parameter}', 'ReportController@monthlyApi');
+    });
+});
+
+Route::post('login', 'ApiTokenController@signIn');
