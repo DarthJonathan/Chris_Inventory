@@ -22,6 +22,8 @@ Route::middleware('auth:api')->group(function() {
        Route::post('/new', 'InvoiceController@exportInvoice');
     });
 
+    Route::get('/items', 'ProductsController@allItemsApi');
+
     Route::prefix('/report')->group(function(){
         Route::get('/yearly/{parameter}', 'ReportController@yearlyApi');
         Route::get('/monthly/{parameter}', 'ReportController@monthlyApi');

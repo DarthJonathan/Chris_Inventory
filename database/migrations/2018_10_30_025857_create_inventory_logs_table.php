@@ -25,6 +25,8 @@ class CreateInventoryLogsTable extends Migration
             $table->float('price')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+
+            $table->index(['transaction_id', 'product_id', 'id']);
         });
     }
 

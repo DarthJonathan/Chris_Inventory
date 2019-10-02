@@ -19,6 +19,14 @@ class ProductsController extends Controller
     }
 
     /**
+     * Returns all items with queue infos
+     * @return string
+     */
+    public function allItemsApi() {
+        return Products::with('queue')->get()->toJson();
+    }
+
+    /**
      * For datatables data
      * @return \Yajra\DataTables\DataTableAbstract|\Yajra\DataTables\DataTables
      */

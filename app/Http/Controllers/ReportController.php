@@ -338,73 +338,78 @@ class ReportController extends Controller
 
         $reports = new Collection();
 
-        if($req->type == "sales") {
-            foreach ($array as $item) {
-                $report = new Report();
+        try {
+            if($req->type == "sales") {
+                foreach ($array as $item) {
+                    $report = new Report();
 
-                $report->setDate($item['date']);
-                $report->setInvoiceId($item['invoice_no.']);
-                $report->setProductName($item['product_name']);
-                $report->setQuantity($item['quantity']);
-                $report->setDiscount($item['discount_incl._vat']);
-                $report->setPrice($item['price_incl._vat']);
-                $report->setCustomer($item['customer_name']);
+                    dd($array);
 
-                //No taxes
-                $report->setTaxInvoice(null);
-                $report->setTaxInvoiceId(null);
+                    $report->setDate($item['date']);
+                    $report->setInvoiceId($item['invoice_no.']);
+                    $report->setProductName($item['product_name']);
+                    $report->setQuantity($item['quantity']);
+                    $report->setDiscount($item['discount_incl._vat']);
+                    $report->setPrice($item['price_incl._vat']);
+                    $report->setCustomer($item['customer_name']);
 
-                $reports->add($report);
-            }
-        }else {
-            foreach ($array as $item) {
-                $report = new Report();
-
-                $report->setDate($item['date']);
-                $report->setInvoiceId($item['invoice_no.']);
-                $report->setProductName($item['product_name']);
-                $report->setQuantity($item['quantity']);
-                $report->setPrice($item['price_incl._vat']);
-                $report->setDiscount($item['discount_incl._vat']);
-
-                if(array_key_exists('tax_invoice_no.', $item)) {
-                    //Check if tax invoice exists
-                    $taxInvoice = TaxInvoice::where('invoice_no', $item['tax_invoice_no.'])
-                        ->first();
-
-                    if($taxInvoice == null) {
-                        $taxInvoice = new TaxInvoice();
-                        $taxInvoice->invoice_no = $item['tax_invoice_no.'];
-                    }
-
-                    $taxInvoice->date = $item['tax_invoice_date'];
-
-                    //If it's already credited
-                    if($item['credited_in_vat_period'] != null) {
-                        $taxInvoice->credited = Carbon::parse(CarbonHelper::replaceMonthToEnglish($item['credited_in_vat_period']));
-                        $taxInvoice->used = true;
-                    }else {
-                        $taxInvoice->date = null;
-                        $taxInvoice->credited = null;
-                        $taxInvoice->used = false;
-                    }
-
-                    $taxInvoice->is_active = true;
-
-                    $report->setTaxInvoice($taxInvoice);
-                    $report->setTaxInvoiceId($taxInvoice->id);
-                }else {
-                    $report->setTaxInvoiceId(null);
+                    //No taxes
                     $report->setTaxInvoice(null);
+                    $report->setTaxInvoiceId(null);
+
+                    $reports->add($report);
                 }
+            }else {
+                foreach ($array as $item) {
+                    $report = new Report();
 
-//                $report->setCustomer($item['depo']);
-//                $report->setCustomer($item['no_kendaraan']);
-//                $report->setCustomer($item['driver']);
-//                $report->setCustomer($item['payment']);
+                    $report->setDate($item['date']);
+                    $report->setInvoiceId($item['invoice_no.']);
+                    $report->setProductName($item['product_name']);
+                    $report->setQuantity($item['quantity']);
+                    $report->setPrice($item['price_incl._vat']);
+                    $report->setDiscount($item['discount_incl._vat']);
 
-                $reports->add($report);
+                    if(array_key_exists('tax_invoice_no.', $item)) {
+                        //Check if tax invoice exists
+                        $taxInvoice = TaxInvoice::where('invoice_no', $item['tax_invoice_no.'])
+                            ->first();
+
+                        if($taxInvoice == null) {
+                            $taxInvoice = new TaxInvoice();
+                            $taxInvoice->invoice_no = $item['tax_invoice_no.'];
+                        }
+
+                        $taxInvoice->date = $item['tax_invoice_date'];
+
+                        //If it's already credited
+                        if($item['credited_in_vat_period'] != null) {
+                            $taxInvoice->credited = Carbon::parse(CarbonHelper::replaceMonthToEnglish($item['credited_in_vat_period']));
+                            $taxInvoice->used = true;
+                        }else {
+                            $taxInvoice->date = null;
+                            $taxInvoice->credited = null;
+                            $taxInvoice->used = false;
+                        }
+
+                        $taxInvoice->is_active = true;
+
+                        $report->setTaxInvoice($taxInvoice);
+                        $report->setTaxInvoiceId($taxInvoice->id);
+                    }else {
+                        $report->setTaxInvoiceId(null);
+                        $report->setTaxInvoice(null);
+                    }
+    //                $report->setCustomer($item['depo']);
+    //                $report->setCustomer($item['no_kendaraan']);
+    //                $report->setCustomer($item['driver']);
+    //                $report->setCustomer($item['payment']);
+
+                    $reports->add($report);
+                }
             }
+        }catch (\Exception $e) {
+            return back()->withErrors('Error importing data in : ' .  $e->getMessage());
         }
 
         //Store the reports in session
@@ -421,36 +426,50 @@ class ReportController extends Controller
         $imports    = Session::get('uploaded_report');
         $type       = Session::get('report_type');
 
-        foreach($imports as $import) {
-            $imported_customer_name = CustomersUtil::findCustomer($import->getCustomer());
-            $imported_item_name = ProductUtil::findProduct($import->getProductName());
+        try {
+            foreach ($imports as $import) {
+                $imported_customer_name = CustomersUtil::findCustomer($import->getCustomer());
+                $imported_item_name = ProductUtil::findProduct($import->getProductName());
 
-            //if null then create new record
-            if($imported_item_name == null) {
-                $newProduct = new Products();
-                $newProduct->product_name = $import->getProductName();
-                $newProduct->description = $import->getProductName();
-                $newProduct->stock = 0;
-                $newProduct->queue_stock = 0;
-                $newProduct->queue_id = 0;
-                $newProduct->is_active = true;
-                $newProduct->save();
+                //if null then create new record
+                if ($imported_item_name == null) {
+                    $newProduct = new Products();
+                    $newProduct->product_name = $import->getProductName();
+                    $newProduct->description = $import->getProductName();
+                    $newProduct->stock = 0;
+                    $newProduct->queue_stock = 0;
+                    $newProduct->queue_id = 0;
+                    $newProduct->is_active = true;
+                    $newProduct->save();
+                }
+
+                if ($imported_customer_name == null) {
+                    $newCustomer = new Customers();
+                    $newCustomer->name = $import->getCustomer();
+                    $newCustomer->is_active = true;
+
+                    $customer_details = [];
+
+                    $customer_details['depo'] = $import['depo'];
+                    $customer_details['no_kendaraan'] = $import['no_kendaraan'];
+                    $customer_details['driver'] = $import['driver'];
+                    $customer_details['payment'] = $import ['payment'];
+
+                    $newCustomer->details = json_encode($customer_details);
+                    $newCustomer->save();
+                }
+
+                if ($type == 'sales')
+                    $this->importSales($import);
+                else
+                    $this->importPurchase($import);
             }
 
-            if($imported_customer_name == null) {
-                $newCustomer = new Customers();
-                $newCustomer->name = $import->getCustomer();
-                $newCustomer->is_active = true;
-                $newCustomer->save();
-            }
-
-            if($type == 'sales')
-                $this->importSales($import);
-            else
-                $this->importPurchase($import);
+        }catch(\Exception $e) {
+            return back()->withErrors("Error creating new record (Error : " . $e->getMessage() . " )");
+        }finally {
+            return redirect('/import')->with('success', 'Importing success');
         }
-
-        return redirect('/import')->with('success', 'Importing success');
     }
 
     /**

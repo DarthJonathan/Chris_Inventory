@@ -15,13 +15,15 @@ class CreatePurchasesTable extends Migration
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('transaction_id')->nullable();
+            $table->string('transaction_id')->nullable();
             $table->integer('product_id')->nullable();
             $table->integer('quantity')->nullable();
             $table->float('price')->nullable();
             $table->float('discount')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+
+            $table->index('transaction_id');
         });
     }
 

@@ -16,13 +16,15 @@ class CreateSalesTable extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->increments('id');
             $table->float('price')->nullable();
-            $table->integer('product_id')->nullable();
-            $table->integer('transaction_id')->nullable();
+            $table->string('product_id')->nullable();
+            $table->string('transaction_id')->nullable();
             $table->float('discount')->nullable();
             $table->dateTime('sales_date')->nullable();
             $table->integer('quantity')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+
+            $table->index(['product_id', 'transaction_id']);
         });
     }
 

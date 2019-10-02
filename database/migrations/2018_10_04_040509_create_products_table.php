@@ -22,6 +22,8 @@ class CreateProductsTable extends Migration
             $table->integer('queue_id')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+
+            $table->index('product_name');
         });
     }
 
