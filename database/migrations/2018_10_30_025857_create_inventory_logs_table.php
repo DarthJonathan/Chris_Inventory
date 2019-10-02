@@ -28,6 +28,8 @@ class CreateInventoryLogsTable extends Migration
 
             $table->index(['transaction_id', 'product_id', 'id']);
         });
+
+        DB::statement('ALTER table inventory_logs PARTITION BY HASH(id) PARTITIONS 20;');
     }
 
     /**

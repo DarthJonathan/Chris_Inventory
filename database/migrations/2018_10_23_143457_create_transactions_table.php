@@ -17,14 +17,17 @@ class CreateTransactionsTable extends Migration
             $table->increments('id');
             $table->string('type');
             $table->string('invoice_id')
-                ->unique()
                 ->nullable();
             $table->string('tax_invoice_id')->nullable();
             $table->integer('customer_id')->nullable();
             $table->dateTime('transaction_date');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+
+            $table->index('invoice_id');
         });
+
+        DB::statement('ALTER table transactions PARTITION BY HASH(id) PARTITIONS 20;');
     }
 
     /**

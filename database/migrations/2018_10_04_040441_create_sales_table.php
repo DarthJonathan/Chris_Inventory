@@ -26,6 +26,8 @@ class CreateSalesTable extends Migration
 
             $table->index(['product_id', 'transaction_id']);
         });
+
+        DB::statement('ALTER table sales PARTITION BY HASH(id) PARTITIONS 20;');
     }
 
     /**

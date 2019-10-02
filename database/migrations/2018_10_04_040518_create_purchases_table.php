@@ -25,6 +25,8 @@ class CreatePurchasesTable extends Migration
 
             $table->index('transaction_id');
         });
+        
+        DB::statement('ALTER table purchases PARTITION BY HASH(id) PARTITIONS 20;');
     }
 
     /**

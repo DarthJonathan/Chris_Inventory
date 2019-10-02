@@ -25,6 +25,8 @@ class CreateProductsTable extends Migration
 
             $table->index('product_name');
         });
+
+        DB::statement('ALTER table products PARTITION BY HASH(id) PARTITIONS 20;');
     }
 
     /**

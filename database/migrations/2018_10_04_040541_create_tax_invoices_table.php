@@ -25,6 +25,8 @@ class CreateTaxInvoicesTable extends Migration
 
             $table->index('invoice_no');
         });
+
+        DB::statement('ALTER table tax_invoices PARTITION BY HASH(id) PARTITIONS 20;');
     }
 
     /**
