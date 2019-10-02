@@ -116,7 +116,7 @@
                 <span class="icon-holder">
                   <i class="c-amber-500 ti-bag"></i>
                 </span>
-                    <span class="title">Inventory</span>
+                    <span class="title">Products</span>
                 </a>
             </li>
             <li class="nav-item active">

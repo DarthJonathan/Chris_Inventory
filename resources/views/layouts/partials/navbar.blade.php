@@ -208,9 +208,12 @@
 {{--                    </li>--}}
                     <li role="separator" class="divider"></li>
                     <li>
-                        <form action="{{ url('logout') }}" class="pl-2 d-b td-n mt-2">
+                        <form action="{{ url('logout') }}" method="post" class="pl-2 d-b td-n mt-2">
                             @csrf
-                            <button class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+                            <button
+                                class="d-b td-n pY-5 bgcH-grey-100 c-grey-700 border-0 text-left"
+                                style="width: 100%; cursor: pointer;"
+                            >
                                 <i class="ti-power-off mR-10"></i>
                                 <span>Logout</span>
                             </button>
