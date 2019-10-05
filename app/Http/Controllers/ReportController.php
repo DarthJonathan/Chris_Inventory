@@ -87,7 +87,7 @@ class ReportController extends Controller
      *
      * @param String $type
      * @param int $monthNumber
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function composesMonthlyTransactionReport(String $type, int $monthNumber){
         $report = collect([]);
@@ -142,50 +142,92 @@ class ReportController extends Controller
      *
      * @param String $type
      * @param int $year
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function composesYearlyTransactionReport(String $type, int $year) {
         $report = collect([]);
 
-        $purchases = Transaction::where('type', $type)
-                        ->whereYear('transaction_date', '=', Carbon::parse('01-01-' . $year)->year)
-                        ->get();
+        Transaction::where('type', strtolower($type))
+            ->whereYear('transaction_date', '=', Carbon::parse('01-01-' . $year)->year)
+            ->chunk(300, function($transactions) use ($type, $report) {
+                foreach($transactions as $transaction) {
+                    if(strcasecmp($type, CommonEnums::SALES) == 0) {
+                        foreach($transaction->sales as $item) {
+                            $report_new = new Report();
 
-        foreach($purchases as $purchase) {
-            foreach($purchase->purchases as $item) {
-                $report_new = new Report();
+                            $report_new->setDate($transaction->transaction_date);
+                            $report_new->setInvoiceId($transaction->invoice_id);
+                            $report_new->setTaxInvoiceId($transaction->tax_invoice_id);
 
-                $report_new->setDate($purchase->transaction_date);
-                $report_new->setInvoiceId($purchase->invoice_id);
-                $report_new->setTaxInvoiceId($purchase->tax_invoice_id);
-                $report_new->setProductName($item->product->product_name);
-                $report_new->setQuantity($item->quantity);
-                $report_new->setDiscount($item->discount);
-                $report_new->setPrice($item->price);
+                            $product = Products::find($item->product_id);
 
-                $customer = CustomersUtil::getCustomerName($purchase->customer_id);
-                $report_new->setCustomer($customer);
+                            $report_new->setProductName($product->product_name);
+                            $report_new->setQuantity($item->quantity);
+                            $report_new->setDiscount($item->discount);
+                            $report_new->setPrice($item->price);
 
-                //Tax Invoice
-                $taxInvoice = new \App\Datamodels\TaxInvoice();
-                $loadedTaxInvoice = TaxInvoice::find($purchase->tax_invoice_id);
+                            $customer = CustomersUtil::getCustomerName($transaction->customer_id);
+                            $report_new->setCustomer($customer);
 
-                if($loadedTaxInvoice == null) {
-                    $taxInvoice->credited_date = null;
-                    $taxInvoice->date = null;
-                    $taxInvoice->tax_invoice_no = null;
-                    $taxInvoice->id = $purchase->tax_invoice_id;
-                }else {
-                    $taxInvoice->credited_date = $loadedTaxInvoice->credited;
-                    $taxInvoice->date = $loadedTaxInvoice->date;
-                    $taxInvoice->tax_invoice_no = $loadedTaxInvoice->invoice_no;
-                    $taxInvoice->id = $purchase->tax_invoice_id;
+                            //Tax Invoice
+                            $taxInvoice = new \App\Datamodels\TaxInvoice();
+                            $loadedTaxInvoice = TaxInvoice::find($transaction->tax_invoice_id);
+
+                            if($loadedTaxInvoice == null) {
+                                $taxInvoice->credited_date = null;
+                                $taxInvoice->date = null;
+                                $taxInvoice->tax_invoice_no = null;
+                                $taxInvoice->id = $transaction->tax_invoice_id;
+                            }else {
+                                $taxInvoice->credited_date = $loadedTaxInvoice->credited;
+                                $taxInvoice->date = $loadedTaxInvoice->date;
+                                $taxInvoice->tax_invoice_no = $loadedTaxInvoice->invoice_no;
+                                $taxInvoice->id = $transaction->tax_invoice_id;
+                            }
+
+                            $report_new->setTaxInvoice($taxInvoice);
+                            $report->add($report_new);
+                        }
+                    }else {
+                        foreach($transaction->purchases as $item) {
+                            $report_new = new Report();
+
+                            $report_new->setDate($transaction->transaction_date);
+                            $report_new->setInvoiceId($transaction->invoice_id);
+                            $report_new->setTaxInvoiceId($transaction->tax_invoice_id);
+
+                            $product = Products::find($item->product_id);
+
+                            $report_new->setProductName($product->product_name);
+                            $report_new->setQuantity($item->quantity);
+                            $report_new->setDiscount($item->discount);
+                            $report_new->setPrice($item->price);
+
+                            $customer = CustomersUtil::getCustomerName($transaction->customer_id);
+                            $report_new->setCustomer($customer);
+
+                            //Tax Invoice
+                            $taxInvoice = new \App\Datamodels\TaxInvoice();
+                            $loadedTaxInvoice = TaxInvoice::find($transaction->tax_invoice_id);
+
+                            if($loadedTaxInvoice == null) {
+                                $taxInvoice->credited_date = null;
+                                $taxInvoice->date = null;
+                                $taxInvoice->tax_invoice_no = null;
+                                $taxInvoice->id = $transaction->tax_invoice_id;
+                            }else {
+                                $taxInvoice->credited_date = $loadedTaxInvoice->credited;
+                                $taxInvoice->date = $loadedTaxInvoice->date;
+                                $taxInvoice->tax_invoice_no = $loadedTaxInvoice->invoice_no;
+                                $taxInvoice->id = $transaction->tax_invoice_id;
+                            }
+
+                            $report_new->setTaxInvoice($taxInvoice);
+                            $report->add($report_new);
+                        }
+                    }
                 }
-
-                $report_new->setTaxInvoice($taxInvoice);
-                $report->add($report_new);
-            }
-        }
+            });
 
         return $report;
     }
@@ -343,8 +385,6 @@ class ReportController extends Controller
                 foreach ($array as $item) {
                     $report = new Report();
 
-                    dd($array);
-
                     $report->setDate($item['date']);
                     $report->setInvoiceId($item['invoice_no.']);
                     $report->setProductName($item['product_name']);
@@ -448,14 +488,14 @@ class ReportController extends Controller
                     $newCustomer->name = $import->getCustomer();
                     $newCustomer->is_active = true;
 
-                    $customer_details = [];
-
-                    $customer_details['depo'] = $import['depo'];
-                    $customer_details['no_kendaraan'] = $import['no_kendaraan'];
-                    $customer_details['driver'] = $import['driver'];
-                    $customer_details['payment'] = $import ['payment'];
-
-                    $newCustomer->details = json_encode($customer_details);
+//                    $customer_details = [];
+//
+//                    $customer_details['depo'] = $import['depo'];
+//                    $customer_details['no_kendaraan'] = $import['no_kendaraan'];
+//                    $customer_details['driver'] = $import['driver'];
+//                    $customer_details['payment'] = $import ['payment'];
+//
+//                    $newCustomer->details = json_encode($customer_details);
                     $newCustomer->save();
                 }
 
@@ -464,11 +504,10 @@ class ReportController extends Controller
                 else
                     $this->importPurchase($import);
             }
+            return redirect('/import')->with('success', 'Importing success');
 
         }catch(\Exception $e) {
             return back()->withErrors("Error creating new record (Error : " . $e->getMessage() . " )");
-        }finally {
-            return redirect('/import')->with('success', 'Importing success');
         }
     }
 
@@ -478,7 +517,6 @@ class ReportController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     private function importPurchase (Report $report) {
-        try {
             $transaction = Transaction::where('type', CommonEnums::PURCHASE())
                 ->where('invoice_id', $report->getInvoiceId())
                 ->where('transaction_date', $report->getDate())
@@ -521,15 +559,12 @@ class ReportController extends Controller
 
             //Changes the stock and average price
             $inventory = Products::find($purchase->product_id);
-            Queue::takeoutItems($inventory, $purchase->quantity);
+//            Queue::putInItemsIn($inventory, $purchase->quantity);
+            $inventory->stock += $purchase->quantity;
             $inventory->save();
 
             //Save the inventory to log
             InventoryLogger::saveNewLog($inventory, $transaction);
-
-        }catch(\Exception $e) {
-            return back()->withErrors("Error creating new record (Error : " . $e->getMessage() . " )");
-        }
     }
 
     /**

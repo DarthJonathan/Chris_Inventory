@@ -4,10 +4,10 @@ namespace App\Datamodels;
 
 use \MyCLabs\Enum\Enum;
 
-class CommonEnums extends Enum {
+final class CommonEnums extends Enum {
     // SALES
-    private const SALES         = "Sales";
+    const SALES         = "Sales";
 
     // PURCHASES
-    private const PURCHASE      = "Purchase";
+    const PURCHASE      = "Purchase";
 }

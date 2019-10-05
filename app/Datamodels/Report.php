@@ -8,6 +8,8 @@ class Report
     public $tax_invoice_id;
     public $product_name;
     public $quantity;
+    public $product_id;
+    public $customer_id;
     public $discount;
     public $price;
     public $tax_invoice;

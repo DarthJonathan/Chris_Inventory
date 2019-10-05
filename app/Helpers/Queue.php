@@ -82,7 +82,6 @@ class Queue {
      * @return bool
      */
     public static function putInItemsIn(Products $product, int $quantity) {
-        $stock_usage = $product->queue->quantity - $product->queue_stock;
         $surplus_quantity = $quantity + $product->queue_stock - $product->queue->quantity;
 
         if($quantity + $product->queue_stock > $product->queue->quantity) {
