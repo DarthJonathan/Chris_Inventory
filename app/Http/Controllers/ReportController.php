@@ -559,8 +559,14 @@ class ReportController extends Controller
 
             //Changes the stock and average price
             $inventory = Products::find($purchase->product_id);
-//            Queue::putInItemsIn($inventory, $purchase->quantity);
-            $inventory->stock += $purchase->quantity;
+            //Set as the lifo if calculation finished
+            if($inventory->queue_id == null) {
+                $inventory->queue_id = $purchase->id;
+                $inventory->queue_stock = $purchase->quantity;
+                $inventory->stock = $purchase->quantity;
+            }else {
+                $inventory->stock += $purchase->quantity;
+            }
             $inventory->save();
 
             //Save the inventory to log
