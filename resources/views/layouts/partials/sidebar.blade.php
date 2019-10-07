@@ -37,14 +37,6 @@
                     <span class="title">Dashboard</span>
                 </a>
             </li>
-            <li class="nav-item active">
-                <a class="sidebar-link" href="/invoice/new">
-                <span class="icon-holder">
-                  <i class="c-black-500 ti-bookmark-alt"></i>
-                </span>
-                    <span class="title">Generate Invoice</span>
-                </a>
-            </li>
             <li class="nav-item dropdown">
                 <a class="dropdown-toggle" href="javascript:void(0);">
                     <span class="icon-holder">

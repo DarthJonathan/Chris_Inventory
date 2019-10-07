@@ -9,11 +9,11 @@ class Report
     public $product_name;
     public $quantity;
     public $product_id;
-    public $customer_id;
     public $discount;
     public $price;
     public $tax_invoice;
     public $customer;
+    public $customer_infos;
 
     /**
      * @return mixed
@@ -157,6 +157,38 @@ class Report
     public function setCustomer($customer): void
     {
         $this->customer = $customer;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProductId()
+    {
+        return $this->product_id;
+    }
+
+    /**
+     * @param mixed $product_id
+     */
+    public function setProductId($product_id): void
+    {
+        $this->product_id = $product_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomerInfos()
+    {
+        return $this->customer_infos;
+    }
+
+    /**
+     * @param mixed $customer_infos
+     */
+    public function setCustomerInfos($customer_infos): void
+    {
+        $this->customer_infos = $customer_infos;
     }
 }
 

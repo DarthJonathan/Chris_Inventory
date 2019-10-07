@@ -440,10 +440,11 @@ class ReportController extends Controller
                         $report->setTaxInvoiceId(null);
                         $report->setTaxInvoice(null);
                     }
-    //                $report->setCustomer($item['depo']);
-    //                $report->setCustomer($item['no_kendaraan']);
-    //                $report->setCustomer($item['driver']);
-    //                $report->setCustomer($item['payment']);
+
+//                    $customer_info['depo'] = $item['depo'];
+//                    $customer_info['no_kendaraan'] = $item['no_kendaraan'];
+//                    $customer_info['driver'] = $item['driver'];
+//                    $customer_info['payment'] = $item['payment'];
 
                     $reports->add($report);
                 }
@@ -489,6 +490,7 @@ class ReportController extends Controller
                     $newCustomer->is_active = true;
 
 //                    $customer_details = [];
+//                    dd($imports);
 //
 //                    $customer_details['depo'] = $import['depo'];
 //                    $customer_details['no_kendaraan'] = $import['no_kendaraan'];
@@ -497,6 +499,8 @@ class ReportController extends Controller
 //
 //                    $newCustomer->details = json_encode($customer_details);
                     $newCustomer->save();
+
+//                    dd($newCustomer);
                 }
 
                 if ($type == 'sales')
@@ -571,6 +575,7 @@ class ReportController extends Controller
 
             //Save the inventory to log
             InventoryLogger::saveNewLog($inventory, $transaction);
+            $transaction->save();
     }
 
     /**
@@ -594,11 +599,6 @@ class ReportController extends Controller
             }
 
             $tax_invoice = null;
-
-            if($report->getCustomer() != null) {
-                $customer = CustomersUtil::findCustomer($report->getCustomer());
-                $transaction->customer_id = $customer != null ? $customer->id : null;
-            }
 
             $sale = new Sales();
             $sale->transaction_id = $transaction->id;
@@ -628,7 +628,7 @@ class ReportController extends Controller
 
             //Save the inventory to log
             InventoryLogger::saveNewLog($inventory, $transaction);
-
+            $transaction->save();
         }catch(\Exception $e) {
             return back()->withErrors("Error creating new record (Error : " . $e->getMessage() . " )");
         }
