@@ -123,7 +123,12 @@ $(document).ready(function() {
         "serverSide": true,
         "columns": [
             {'data': 'invoice_id'},
-            {'data': 'transaction_date'},
+            {
+                'data': 'transaction_date',
+                render: (data) => {
+                    return moment(data).format("DD MMMM YYYY");
+                }
+            },
             {
                 'data': 'tax_invoice_id',
                 render: function (data, type, row) {
@@ -265,30 +270,36 @@ $(document).ready(function() {
                 }
             },
             {
-                data: {
-                    quantity: 'quantity',
-                    price: 'price',
-                    discount: 'discount'
+                data: ( row, type, set, meta ) => {
+                    return {
+                        'price': row.price,
+                        'discount': row.discount,
+                        'quantity': row.quantity
+                    }
                 },
                 render: (data) => {
                     return 'Rp.' + ((data.price - data.discount) * data.quantity) + ',-';
                 }
             },
             {
-                data: {
-                    quantity: 'quantity',
-                    price: 'price',
-                    discount: 'discount'
+                data: ( row, type, set, meta ) => {
+                    return {
+                        'price': row.price,
+                        'discount': row.discount,
+                        'quantity': row.quantity
+                    }
                 },
                 render: (data) => {
                     return 'Rp.' + (((data.price - data.discount) * data.quantity)/1.1).toFixed(0) + ',-';
                 }
             },
             {
-                data: {
-                    quantity: 'quantity',
-                    price: 'price',
-                    discount: 'discount'
+                data: ( row, type, set, meta ) => {
+                    return {
+                        'price': row.price,
+                        'discount': row.discount,
+                        'quantity': row.quantity
+                    }
                 },
                 render: (data) => {
                     return 'Rp.' + (((data.price - data.discount) * data.quantity) - (((data.price - data.discount) * data.quantity)/1.1).toFixed(0)) + ',-';
@@ -377,30 +388,36 @@ $(document).ready(function() {
                 }
             },
             {
-                data: {
-                    quantity: 'quantity',
-                    price: 'price',
-                    discount: 'discount'
+                data: ( row, type, set, meta ) => {
+                    return {
+                        'price': row.price,
+                        'discount': row.discount,
+                        'quantity': row.quantity
+                    }
                 },
                 render: (data) => {
                     return 'Rp.' + ((data.price - data.discount) * data.quantity) + ',-';
                 }
             },
             {
-                data: {
-                    quantity: 'quantity',
-                    price: 'price',
-                    discount: 'discount'
+                data: ( row, type, set, meta ) => {
+                    return {
+                        'price': row.price,
+                        'discount': row.discount,
+                        'quantity': row.quantity
+                    }
                 },
                 render: (data) => {
                     return 'Rp.' + (((data.price - data.discount) * data.quantity)/1.1).toFixed(0) + ',-';
                 }
             },
             {
-                data: {
-                    quantity: 'quantity',
-                    price: 'price',
-                    discount: 'discount'
+                data: ( row, type, set, meta ) => {
+                    return {
+                        'price': row.price,
+                        'discount': row.discount,
+                        'quantity': row.quantity
+                    }
                 },
                 render: (data) => {
                     return 'Rp.' + (((data.price - data.discount) * data.quantity) - (((data.price - data.discount) * data.quantity)/1.1).toFixed(0)) + ',-';

@@ -11,12 +11,11 @@
 |
 */
 
-Route::get('/', 'DashboardController@dashboard');
-
 //Auth::routes(['register' => false]);
 Auth::routes();
 
 Route::middleware('auth')->group(function() {
+    Route::get('/', 'DashboardController@dashboard');
     Route::get('/dashboard', 'DashboardController@dashboard');
 
     Route::prefix('api/v1')->group(function(){
