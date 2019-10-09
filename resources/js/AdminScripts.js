@@ -172,6 +172,7 @@ $(document).ready(function() {
                     if (res.success === true) {
                         salesTable.ajax.reload();
                     } else {
+                        console.log(res);
                         alert('Deleting error!');
                     }
                 });
