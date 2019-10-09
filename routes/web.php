@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function() {
         Route::get('/details/{id}', 'SalesController@detail');
         Route::get('/edit/{id}', 'SalesController@editView');
         Route::post('/edit', 'SalesController@handleEdit');
+        Route::post('/delete', 'SalesController@deleteSales');
     });
 
     Route::prefix('customers')->group(function() {

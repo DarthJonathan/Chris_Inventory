@@ -272,7 +272,7 @@ class SalesController extends Controller
      * @param Request $req
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function delete(Request $req)
+    public function deleteSales(Request $req)
     {
         try {
             $req->validate([
@@ -296,9 +296,9 @@ class SalesController extends Controller
             }
 
             $transaction->save();
-            return redirect('/purchases')->with('success', 'Success deleting sales');
+            return response()->json(['success' => true, 'message' => 'Success deleting purchase']);
         }catch(\Exception $e) {
-            return back()->withErrors("Error  changes (Error" . $e->getMessage() . ")");
+            return response()->json(['success' => false, 'message' => 'Error deleting sales', 'error' => $e->getMessage()]);
         }
     }
 }

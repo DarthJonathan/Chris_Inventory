@@ -21,4 +21,8 @@ class Transaction extends Model
     public function sales() {
         return $this->hasMany('App\Sales', 'transaction_id', 'id');
     }
+
+    public function customer() {
+        return $this->hasOne('App\Customers', 'id', 'customer_id');
+    }
 }

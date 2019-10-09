@@ -107,9 +107,8 @@ $(document).ready(function() {
                     if (res.success === true) {
                         purchasesTable.ajax.reload();
                     } else {
-
+                        alert('Deleting error!');
                     }
-                    console.log(res);
                 });
         }
     });
@@ -173,9 +172,8 @@ $(document).ready(function() {
                     if (res.success === true) {
                         salesTable.ajax.reload();
                     } else {
-
+                        alert('Deleting error!');
                     }
-                    console.log(res);
                 });
         }
     });

@@ -350,7 +350,7 @@ class PurchasesController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Success deleting purchase']);
         }catch(\Exception $e) {
-            return response()->json(['success' => true, 'message' => 'Error deleting purchase', 'error' => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Error deleting purchase', 'error' => $e->getMessage()]);
         }
     }
 

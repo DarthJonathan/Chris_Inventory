@@ -33,7 +33,13 @@
                         </tr>
                         <tr>
                             <th>Customer</th>
-                            <td>PT. Byteforce</td>
+                            <td>
+                                @if($transaction->customer)
+                                    {{ $transaction->customer->name }}
+                                @else
+                                    {{ __("No Customer")  }}
+                                @endif
+                            </td>
                         </tr>
                     </table>
                     <hr>
