@@ -19,6 +19,17 @@ $(document).ready(function() {
                 }
             },
             {
+                data: ( row, type, set, meta ) => {
+                    return {
+                        'price': row.queue.price,
+                        'quantity': row.stock
+                    }
+                },
+                render: (data) => {
+                    return 'Rp.' + (data.price * data.quantity) + ',-';
+                }
+            },
+            {
                 'data': null,
                 render: function (data, type, row) {
                     return '<button class="btn btn-primary mr-2 edit-product" data-type="edit">' +
