@@ -15,7 +15,7 @@ $(document).ready(function() {
             {
                 'data': 'queue.price',
                 render: function (data, type, row) {
-                    return 'Rp.' + data + ',00';
+                    return 'Rp.' + numeral(data).format('0,0.00');
                 }
             },
             {
@@ -26,7 +26,7 @@ $(document).ready(function() {
                     }
                 },
                 render: (data) => {
-                    return 'Rp.' + (data.price * data.quantity) + ',-';
+                    return 'Rp.' + numeral(data.price * data.quantity).format('0,0.00');
                 }
             },
             {
@@ -270,13 +270,13 @@ $(document).ready(function() {
             {
                 data: 'price',
                 render: (data) => {
-                    return 'Rp.' + data + ',-';
+                    return 'Rp.' + numeral(data).format('0,0.00');
                 }
             },
             {
                 data: 'discount',
                 render: (data) => {
-                    return 'Rp.' + data + ',-';
+                    return 'Rp.' + numeral(data).format('0,0.00');
                 }
             },
             {
@@ -288,7 +288,7 @@ $(document).ready(function() {
                     }
                 },
                 render: (data) => {
-                    return 'Rp.' + ((data.price - data.discount) * data.quantity) + ',-';
+                    return 'Rp.' + numeral((data.price - data.discount) * data.quantity).format('0,0.00');
                 }
             },
             {
@@ -300,7 +300,7 @@ $(document).ready(function() {
                     }
                 },
                 render: (data) => {
-                    return 'Rp.' + (((data.price - data.discount) * data.quantity)/1.1).toFixed(0) + ',-';
+                    return 'Rp.' + numeral(((data.price - data.discount) * data.quantity)/1.1).toFixed(0).format('0,0.00');
                 }
             },
             {
@@ -312,7 +312,7 @@ $(document).ready(function() {
                     }
                 },
                 render: (data) => {
-                    return 'Rp.' + (((data.price - data.discount) * data.quantity) - (((data.price - data.discount) * data.quantity)/1.1).toFixed(0)) + ',-';
+                    return 'Rp.' + numeral(((data.price - data.discount) * data.quantity) - (((data.price - data.discount) * data.quantity)/1.1).toFixed(0)).format('0,0.00');
                 }
             },
             {
@@ -388,13 +388,13 @@ $(document).ready(function() {
             {
                 data: 'price',
                 render: (data) => {
-                    return 'Rp.' + data + ',-';
+                    return 'Rp.' + numeral(data).format('0,0.00');
                 }
             },
             {
                 data: 'discount',
                 render: (data) => {
-                    return 'Rp.' + data + ',-';
+                    return 'Rp.' + numeral(data).format('0,0.00');
                 }
             },
             {
@@ -406,7 +406,7 @@ $(document).ready(function() {
                     }
                 },
                 render: (data) => {
-                    return 'Rp.' + ((data.price - data.discount) * data.quantity) + ',-';
+                    return 'Rp.' + numeral((data.price - data.discount) * data.quantity).format('0,0.00');
                 }
             },
             {
@@ -418,7 +418,7 @@ $(document).ready(function() {
                     }
                 },
                 render: (data) => {
-                    return 'Rp.' + (((data.price - data.discount) * data.quantity)/1.1).toFixed(0) + ',-';
+                    return 'Rp.' + numeral(((data.price - data.discount) * data.quantity)/1.1).toFixed(0).format('0,0.00');
                 }
             },
             {
@@ -430,7 +430,7 @@ $(document).ready(function() {
                     }
                 },
                 render: (data) => {
-                    return 'Rp.' + (((data.price - data.discount) * data.quantity) - (((data.price - data.discount) * data.quantity)/1.1).toFixed(0)) + ',-';
+                    return 'Rp.' + numeral(((data.price - data.discount) * data.quantity) - (((data.price - data.discount) * data.quantity)/1.1)).toFixed(0).format('0,0.00');
                 }
             },
             {

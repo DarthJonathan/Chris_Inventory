@@ -1,7 +1,6 @@
 
 window._ = require('lodash');
 window.Popper = require('popper.js').default;
-
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
  * for JavaScript based Bootstrap features such as modals and tabs. This
@@ -41,13 +40,14 @@ if (token) {
 /**
  * Vendors
  */
-window.pickaday = require("pikaday");
-window.sparkline = require('sparkline');
-window.DataTable = require('datatables.net-bs4');
-window.DataTable = require('datatables.net-responsive-bs4');
-window.DataTable = require('datatables.net-rowreorder-bs4');
-window.qs = require('qs');
-window.moment = require('moment');
+window.pickaday     = require("pikaday");
+window.sparkline    = require('sparkline');
+window.DataTable    = require('datatables.net-bs4');
+window.DataTable    = require('datatables.net-responsive-bs4');
+window.DataTable    = require('datatables.net-rowreorder-bs4');
+window.qs           = require('qs');
+window.moment       = require('moment');
+window.numeral      = require('numeral');
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
