@@ -19,7 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::middleware('auth:api')->group(function() {
     Route::prefix('/invoice')->group(function() {
-       Route::post('/new', 'InvoiceController@exportInvoice');
+       Route::put('/new', 'InvoiceController@exportInvoice');
     });
 
     Route::get('/items', 'ProductsController@allItemsApi');

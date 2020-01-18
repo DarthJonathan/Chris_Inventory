@@ -6,10 +6,11 @@ namespace App\Datamodels;
 
 class InvoiceItem
 {
-    private $itemName;
-    private $quantity;
-    private $price;
-    private $discount;
+    public $itemName;
+    public $quantity;
+    public $price;
+    public $discount;
+    public $itemId;
 
     /**
      * @return mixed
@@ -73,5 +74,21 @@ class InvoiceItem
     public function setDiscount($discount): void
     {
         $this->discount = $discount;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItemId()
+    {
+        return $this->itemId;
+    }
+
+    /**
+     * @param mixed $itemId
+     */
+    public function setItemId($itemId): void
+    {
+        $this->itemId = $itemId;
     }
 }
