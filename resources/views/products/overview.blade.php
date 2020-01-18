@@ -62,6 +62,7 @@
                                  <th>Details</th>
                                  <th style="width: 10%">Stock</th>
                                  <th style="width: 10%">Queue Price</th>
+                                 <th style="width: 15%">Asset Total</th>
                                  <th style="width: 15%;">Actions</th>
                              </tr>
                          </tfoot>

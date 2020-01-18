@@ -13,15 +13,19 @@ $(document).ready(function() {
             {'data': 'description'},
             {'data': 'stock'},
             {
-                'data': 'queue.price',
+                'data': 'queue',
                 render: function (data, type, row) {
-                    return 'Rp.' + numeral(data).format('0,0.00');
+                    if(data == null) {
+                        return 'Rp. 0,00';
+                    }else {
+                        return 'Rp.' + numeral(data.price).format('0,0.00');
+                    }
                 }
             },
             {
                 data: ( row, type, set, meta ) => {
                     return {
-                        'price': row.queue.price,
+                        'price': row.queue == null ? 0 : row.queue.price,
                         'quantity': row.stock
                     }
                 },
