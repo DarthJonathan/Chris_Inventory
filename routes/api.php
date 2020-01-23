@@ -26,7 +26,8 @@ Route::middleware('auth:api')->group(function() {
 
     Route::prefix('/report')->group(function(){
         Route::get('/yearly/{parameter}', 'ReportController@yearlyApi');
-        Route::get('/monthly/{parameter}', 'ReportController@monthlyApi');
+        Route::get('/monthly/{parameter}', g'ReportController@monthlyApi');
+        Route::get('/home_stat', 'ReportController@homeStats');
     });
 });
 

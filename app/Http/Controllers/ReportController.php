@@ -633,4 +633,21 @@ class ReportController extends Controller
             return back()->withErrors("Error creating new record (Error : " . $e->getMessage() . " )");
         }
     }
+
+    /**
+     * Home page of application
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function homeStats() {
+        $total_transactions = Transaction::whereYear('transaction_date', Carbon::now())->count();
+        $total_transactions_last_year = Transaction::whereYear('transaction_date', Carbon::now()->subYear())->count();
+        $transaction_decrease = $total_transactions_last_year == 0 ? 0 : 100 - ($total_transactions/$total_transactions_last_year * 100);
+        $data = [
+            'total_transaction'   => Transaction::whereYear('transaction_date', Carbon::now())->count(),
+            'total_transaction_decrease'    => $transaction_decrease,
+            'total_sales'  => Transaction::where('type', 'Sales')->count(),
+            'total_purchases'  => Transaction::where('type', 'Purchases')->count()
+        ];
+        return response($data,200);
+    }
 }
