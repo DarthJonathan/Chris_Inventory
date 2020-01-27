@@ -31,7 +31,7 @@ class ProductsController extends Controller
      * @return \Yajra\DataTables\DataTableAbstract|\Yajra\DataTables\DataTables
      */
     public function overviewDatatables() {
-        return datatables(Products::with('queue')->get())->toJson();
+        return datatables(Products::with('queue'))->toJson();
     }
 
     /**

@@ -25,12 +25,12 @@ $(document).ready(function() {
             {
                 data: ( row, type, set, meta ) => {
                     return {
-                        'price': row.queue == null ? 0 : row.queue.price,
+                        'price': row.queue == null ? 0 : row.queue.price /1.1,
                         'quantity': row.stock
                     }
                 },
                 render: (data) => {
-                    return 'Rp.' + numeral(data.price * data.quantity).format('0,0.00');
+                    return 'Rp.' + numeral(data.price/1.1 * data.quantity).format('0,0.00');
                 }
             },
             {
