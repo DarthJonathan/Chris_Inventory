@@ -37,7 +37,6 @@ class SalesController extends Controller
             'is_active'     => true
         ])
             ->with('sales')
-            ->get()
         )->toJson();
     }
 

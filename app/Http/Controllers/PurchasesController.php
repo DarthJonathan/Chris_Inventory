@@ -40,7 +40,6 @@ class PurchasesController extends Controller
             'is_active'     => true
         ])
             ->with('purchases')
-            ->get()
         )->toJson();
     }
 
