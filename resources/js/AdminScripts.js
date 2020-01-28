@@ -18,7 +18,7 @@ $(document).ready(function() {
                     if(data == null) {
                         return 'Rp. 0,00';
                     }else {
-                        return 'Rp.' + numeral(data.price).format('0,0.00');
+                        return 'Rp.' + numeral(data.price/1.1).format('0,0.00');
                     }
                 }
             },
