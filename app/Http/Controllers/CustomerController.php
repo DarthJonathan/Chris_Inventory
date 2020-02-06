@@ -10,7 +10,7 @@ use Validator;
 class CustomerController extends Controller
 {
     /**
-     * Products overview
+     * Customer overview
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function overview() {
@@ -18,6 +18,18 @@ class CustomerController extends Controller
             'customers'  => Customers::paginate(25)
         ];
         return view('customer.overview', $data);
+    }
+
+    /**
+     * Customer detail
+     * @param $id customerid
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View view
+     */
+    public function details($id) {
+        $data = [
+            'customer_detail'       => Customers::find($id)
+        ];
+        return view('customer.detail', $data);
     }
 
     /**
