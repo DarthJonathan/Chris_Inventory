@@ -13,7 +13,7 @@ class ApiController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function getProducts() {
-        return response()->json(Products::all());
+        return response()->json(Products::where('is_active', 1)->get());
     }
 
     /**
@@ -30,7 +30,7 @@ class ApiController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function getAllCustomers() {
-        return response()->json(Customers::all());
+        return response()->json(Customers::where('is_active', 1)->get());
     }
 
     /**
@@ -39,6 +39,6 @@ class ApiController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function getAllCustomersDatatables() {
-        return datatables(Customers::all())->toJson();
+        return datatables(Customers::where('is_active', 1)->get())->toJson();
     }
 }

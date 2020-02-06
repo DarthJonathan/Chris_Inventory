@@ -15,7 +15,7 @@ class CustomerController extends Controller
      */
     public function overview() {
         $data = [
-            'customers'  => Customers::paginate(25)
+            'customers'  => Customers::where('is_active', true)->paginate(25)
         ];
         return view('customer.overview', $data);
     }
@@ -89,7 +89,7 @@ class CustomerController extends Controller
         $data = [
             'customer'  => $item
         ];
-        return View("customers/edit", $data);
+        return View("customer.edit", $data);
     }
 
     /**
@@ -110,7 +110,7 @@ class CustomerController extends Controller
         $validator = Validator::make($req->all(), $rules);
 
         if($validator->fails()) {
-            return redirect('/customers/new')
+            return back()
                 ->withErrors($validator)
                 ->withInput();
         }
@@ -152,7 +152,7 @@ class CustomerController extends Controller
             $product->is_active = false;
 
             $product->save();
-            return back()->with('success', 'Customer Deletion Success!');
+            return redirect('/customers')->with('success', 'Customer Deletion Success!');
         }catch(\Exception $e) {
             return back()->withErrors("Error, ( " . $e->getMessage() . " )");
         }

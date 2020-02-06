@@ -8,40 +8,44 @@
                     <form class="forms-sample" method="post" action="{{ url('/customers/edit') }}">
                         @csrf
 
-                        <input type="hidden" name="id" value="{{ $id }}">
+                        <input type="hidden" name="id" value="{{ $customer->id }}">
 
                         <div class="form-group row">
                             <label for="date" class="col-sm-3 col-form-label">Customer Name</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="{{ $name }}">
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" value="{{ $customer->name }}">
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label for="date" class="col-sm-3 col-form-label">Address</label>
                             <div class="col-sm-9">
-                                <textarea name="address" placeholder="Address" class="form-control" id="address" cols="30" rows="10" value="{{ $address }}"></textarea>
+                                <textarea name="address" placeholder="Address" class="form-control" id="address" cols="30" rows="10" value="{{ $customer->address }}">
+                                    {!! $customer->address !!}
+                                </textarea>
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label for="date" class="col-sm-3 col-form-label">Phone</label>
                             <div class="col-sm-9">
-                                <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone" value="{{ $phone }}">
+                                <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone" value="{{ $customer->phone }}">
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label for="date" class="col-sm-3 col-form-label">Email</label>
                             <div class="col-sm-9">
-                                <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="{{ $email }}">
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="{{ $customer->email }}">
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label for="date" class="col-sm-3 col-form-label">Details</label>
                             <div class="col-sm-9">
-                                <textarea name="detail" placeholder="Detail" class="form-control" id="detail" cols="30" rows="10" value="{{ $name }}"></textarea>
+                                <textarea name="details" placeholder="Detail" class="form-control" id="detail" cols="30" rows="10" value="{{ $customer->details }}">
+                                    {!! $customer->details !!}
+                                </textarea>
                             </div>
                         </div>
 
