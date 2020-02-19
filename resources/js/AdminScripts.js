@@ -25,7 +25,7 @@ $(document).ready(function() {
             {
                 data: ( row, type, set, meta ) => {
                     return {
-                        'price': row.queue == null ? 0 : row.queue.price /1.1,
+                        'price': row.queue == null ? 0 : row.queue.price,
                         'quantity': row.stock
                     }
                 },
