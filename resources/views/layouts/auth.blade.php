@@ -14,10 +14,10 @@
     <link rel="shortcut icon" href="images/favicon.png" />
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ secure_asset('js/app.js') }}" defer></script>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ secure_asset('css/app.css') }}" rel="stylesheet">
     <style>
         #loader {
             transition: all 0.3s ease-in-out;
