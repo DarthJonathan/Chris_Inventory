@@ -6,10 +6,18 @@
     <title>Inventory System</title>
 
     <!-- Scripts -->
-    <script src="{{ secure_asset('js/app.js') }}" defer></script>
+    @if(App::environment() == "production")
+        <script src="{{ secure_asset('js/app.js') }}" defer></script>
+    @else
+        <script src="{{ asset('js/app.js') }}" defer></script>
+    @endif
 
     <!-- Styles -->
-    <link href="{{ secure_asset('css/app.css') }}" rel="stylesheet">
+    @if(App::environment() == "production")
+        <link href="{{ secure_asset('css/app.css') }}" rel="stylesheet">
+    @else
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @endif
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 

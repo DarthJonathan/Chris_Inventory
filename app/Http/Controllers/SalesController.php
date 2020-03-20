@@ -127,7 +127,6 @@ class SalesController extends Controller
 
             return redirect('/sales')->with('success', 'Success adding new sale data');
         }catch(\Exception $e) {
-            dd($e->getMessage());
             return back()->withErrors("Error creating new record (Error : " . $e->getMessage() . " )");
         }
     }

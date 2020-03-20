@@ -304,7 +304,7 @@ $(document).ready(function() {
                     }
                 },
                 render: (data) => {
-                    return 'Rp.' + numeral(((data.price - data.discount) * data.quantity)/1.1).toFixed(0).format('0,0.00');
+                    return 'Rp.' + numeral(parseFloat(((data.price - data.discount) * data.quantity)/1.1).toFixed(0)).format('0,0.00');
                 }
             },
             {
@@ -316,7 +316,7 @@ $(document).ready(function() {
                     }
                 },
                 render: (data) => {
-                    return 'Rp.' + numeral(((data.price - data.discount) * data.quantity) - (((data.price - data.discount) * data.quantity)/1.1).toFixed(0)).format('0,0.00');
+                    return 'Rp.' + numeral(parseFloat(((data.price - data.discount) * data.quantity) - (((data.price - data.discount) * data.quantity)/1.1)).toFixed(0)).format('0,0.00');
                 }
             },
             {
@@ -422,7 +422,7 @@ $(document).ready(function() {
                     }
                 },
                 render: (data) => {
-                    return 'Rp.' + numeral(((data.price - data.discount) * data.quantity)/1.1).toFixed(0).format('0,0.00');
+                    return 'Rp.' + numeral(parseFloat((data.price - data.discount) * data.quantity)/1.1.toFixed(0)).format('0,0.00');
                 }
             },
             {
@@ -434,7 +434,7 @@ $(document).ready(function() {
                     }
                 },
                 render: (data) => {
-                    return 'Rp.' + numeral(((data.price - data.discount) * data.quantity) - (((data.price - data.discount) * data.quantity)/1.1)).toFixed(0).format('0,0.00');
+                    return 'Rp.' + numeral(parseFloat((data.price - data.discount) * data.quantity) - (((data.price - data.discount) * data.quantity)/1.1).toFixed(0)).format('0,0.00');
                 }
             },
             {

@@ -11,7 +11,9 @@
 |
 */
 
-//Auth::routes(['register' => false]);
+if(\Illuminate\Support\Facades\App::environment() != 'production') {
+    Auth::routes(['register' => false]);
+}
 Auth::routes();
 
 Route::middleware('auth')->group(function() {
