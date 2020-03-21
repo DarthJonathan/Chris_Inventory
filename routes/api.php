@@ -25,8 +25,12 @@ Route::middleware('auth:api')->group(function() {
     Route::get('/items', 'ProductsController@allItemsApi');
 
     Route::prefix('/report')->group(function(){
-        Route::get('/yearly/{parameter}/{page}', 'ReportController@yearlyApi');
-        Route::get('/monthly/{parameter}/{page}', 'ReportController@monthlyApi');
+        Route::get('/yearly/sales/{year}/{page}', 'ReportController@yearlySalesApi');
+        Route::get('/yearly/purchase/{year}/{page}', 'ReportController@yearlyPurchaseApi');
+
+        Route::get('/monthly/sales/{month}/{year}/{page}', 'ReportController@monthlySalesApi');
+        Route::get('/monthly/purchase/{month}/{year}/{page}', 'ReportController@monthlyPurchaseApi');
+
         Route::get('/home_stat', 'ReportController@homeStats');
     });
 });

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
+use JWTAuth;
 
 class ApiTokenController extends Controller
 {
@@ -15,10 +15,10 @@ class ApiTokenController extends Controller
      * @return array
      */
     public function update(Request $req) {
-        $token = Str::random(60);
+        $token = JWTAuth::fromUser($req->user());
 
         $req->user()->forceFill([
-            'api_token' => hash('sha256', $token),
+            'api_token' => $token,
         ])->save();
 
         return ['token' => $token];

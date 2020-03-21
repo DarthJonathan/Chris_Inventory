@@ -650,4 +650,58 @@ class ReportController extends Controller
         ];
         return response($data,200);
     }
+
+    /**
+     * Yearly sales api
+     * @param $year
+     * @param $page
+     * @return mixed
+     */
+    public function yearlySalesApi($year, $page) {
+        return Transaction::where('type', CommonEnums::SALES())
+            ->whereYear('transaction_date', '=', $year)
+            ->with('sales')
+            ->offset(($page-1)*300)
+            ->limit(300)
+            ->get()
+            ->toJson();
+    }
+
+    /**
+     * Yearly purchase api
+     * @param $year
+     * @param $page
+     * @return mixed
+     */
+    public function yearlyPurchaseApi($year, $page) {
+        return Transaction::where('type', CommonEnums::PURCHASE())
+            ->whereYear('transaction_date', '=', $year)
+            ->with('purchases')
+            ->offset(($page-1)*300)
+            ->limit(300)
+            ->get()
+            ->toJson();
+    }
+
+    public function monthlySalesApi($month, $year, $page) {
+        return Transaction::where('type', CommonEnums::SALES())
+            ->whereYear('transaction_date', '=', $year)
+            ->whereMonth('transaction_date', '=', $month)
+            ->with('sales')
+            ->offset(($page-1)*300)
+            ->limit(300)
+            ->get()
+            ->toJson();
+    }
+
+    public function monthlyPurchaseApi($month, $year, $page) {
+        return Transaction::where('type', CommonEnums::PURCHASE())
+            ->whereYear('transaction_date', '=', $year)
+            ->whereMonth('transaction_date', '=', $month)
+            ->with('purchases')
+            ->offset(($page-1)*300)
+            ->limit(300)
+            ->get()
+            ->toJson();
+    }
 }
