@@ -18,6 +18,10 @@ class Transaction extends Model
         return $this->hasMany('App\Purchase', 'transaction_id', 'id');
     }
 
+    public function purchase() {
+        return $this->hasMany('App\Purchase', 'transaction_id', 'id');
+    }
+
     public function sales() {
         return $this->hasMany('App\Sales', 'transaction_id', 'id');
     }

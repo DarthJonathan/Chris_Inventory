@@ -138,6 +138,61 @@ class ReportController extends Controller
     }
 
     /**
+     * Creates a monthly transaction report
+     *
+     * @param String $type
+     * @param int $monthNumber
+     * @return Collection
+     */
+    public function composesMonthlyTransactionReportByYear(String $type, int $monthNumber, int $year){
+        $report = collect([]);
+
+        $transactions = Transaction::where('type', $type)
+            ->whereYear('transaction_date', '=', $year)
+            ->whereMonth('transaction_date', '=', $monthNumber)
+            ->with($type)
+            ->get();
+
+            foreach($transactions as $transaction) {
+                foreach($transaction->{$type} as $item) {
+                    $report_new = new Report();
+
+                    $report_new->setDate($transaction->transaction_date);
+                    $report_new->setInvoiceId($transaction->invoice_id);
+                    $report_new->setTaxInvoiceId($transaction->tax_invoice_id);
+                    $report_new->setProductName($item->product->product_name);
+                    $report_new->setQuantity($item->quantity);
+                    $report_new->setDiscount($item->discount);
+                    $report_new->setPrice($item->price);
+
+                    $customer = CustomersUtil::getCustomerName($transaction->customer_id);
+                    $report_new->setCustomer($customer);
+
+                    //Tax Invoice
+                    $taxInvoice = new \App\Datamodels\TaxInvoice();
+                    $loadedTaxInvoice = TaxInvoice::find($transaction->tax_invoice_id);
+
+                    if ($loadedTaxInvoice == null) {
+                        $taxInvoice->credited_date = null;
+                        $taxInvoice->date = null;
+                        $taxInvoice->tax_invoice_no = null;
+                        $taxInvoice->id = $transaction->tax_invoice_id;
+                    } else {
+                        $taxInvoice->credited_date = $loadedTaxInvoice->credited;
+                        $taxInvoice->date = $loadedTaxInvoice->date;
+                        $taxInvoice->tax_invoice_no = $loadedTaxInvoice->invoice_no;
+                        $taxInvoice->id = $transaction->tax_invoice_id;
+                    }
+
+                    $report_new->setTaxInvoice($taxInvoice);
+                    $report->add($report_new);
+                }
+        }
+
+        return $report;
+    }
+
+    /**
      * Returns a yearly transaction report based on type
      *
      * @param String $type
@@ -657,14 +712,9 @@ class ReportController extends Controller
      * @param $page
      * @return mixed
      */
-    public function yearlySalesApi($year, $page) {
-        return Transaction::where('type', CommonEnums::SALES())
-            ->whereYear('transaction_date', '=', $year)
-            ->with('sales')
-            ->offset(($page-1)*300)
-            ->limit(300)
-            ->get()
-            ->toJson();
+    public function yearlySalesApi($year) {
+        $type = CommonEnums::SALES();
+        return $this->composesYearlyTransactionReport($type, $year)->toJson();
     }
 
     /**
@@ -673,35 +723,32 @@ class ReportController extends Controller
      * @param $page
      * @return mixed
      */
-    public function yearlyPurchaseApi($year, $page) {
-        return Transaction::where('type', CommonEnums::PURCHASE())
-            ->whereYear('transaction_date', '=', $year)
-            ->with('purchases')
-            ->offset(($page-1)*300)
-            ->limit(300)
-            ->get()
-            ->toJson();
+    public function yearlyPurchaseApi($year) {
+        $type = CommonEnums::PURCHASE();
+        return $this->composesYearlyTransactionReport($type, $year)->toJson();
     }
 
-    public function monthlySalesApi($month, $year, $page) {
-        return Transaction::where('type', CommonEnums::SALES())
-            ->whereYear('transaction_date', '=', $year)
-            ->whereMonth('transaction_date', '=', $month)
-            ->with('sales')
-            ->offset(($page-1)*300)
-            ->limit(300)
-            ->get()
-            ->toJson();
+    /**
+     * Monthly Sales Api
+     * @param $month
+     * @param $year
+     * @param $page
+     * @return mixed
+     */
+    public function monthlySalesApi($month, $year) {
+        $type = CommonEnums::SALES();
+        return $this->composesMonthlyTransactionReportByYear($type, $month, $year)->toJson();
     }
 
-    public function monthlyPurchaseApi($month, $year, $page) {
-        return Transaction::where('type', CommonEnums::PURCHASE())
-            ->whereYear('transaction_date', '=', $year)
-            ->whereMonth('transaction_date', '=', $month)
-            ->with('purchases')
-            ->offset(($page-1)*300)
-            ->limit(300)
-            ->get()
-            ->toJson();
+    /**
+     * Monthly Purchase Api
+     * @param $month
+     * @param $year
+     * @param $page
+     * @return mixed
+     */
+    public function monthlyPurchaseApi($month, $year) {
+        $type = CommonEnums::PURCHASE();
+        return $this->composesMonthlyTransactionReportByYear($type, $month, $year)->toJson();
     }
 }

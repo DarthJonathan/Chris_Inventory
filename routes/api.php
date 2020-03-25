@@ -25,11 +25,11 @@ Route::middleware('jwt.auth')->group(function() {
     Route::get('/items', 'ProductsController@allItemsApi');
 
     Route::prefix('/report')->group(function(){
-        Route::get('/yearly/sales/{year}/{page}', 'ReportController@yearlySalesApi');
-        Route::get('/yearly/purchase/{year}/{page}', 'ReportController@yearlyPurchaseApi');
+        Route::get('/yearly/sales/{year}', 'ReportController@yearlySalesApi');
+        Route::get('/yearly/purchases/{year}', 'ReportController@yearlyPurchaseApi');
 
-        Route::get('/monthly/sales/{month}/{year}/{page}', 'ReportController@monthlySalesApi');
-        Route::get('/monthly/purchase/{month}/{year}/{page}', 'ReportController@monthlyPurchaseApi');
+        Route::get('/monthly/sales/{month}/{year}', 'ReportController@monthlySalesApi');
+        Route::get('/monthly/purchases/{month}/{year}', 'ReportController@monthlyPurchaseApi');
 
         Route::get('/home_stat', 'ReportController@homeStats');
     });

@@ -11,6 +11,9 @@ final class CommonEnums extends Enum {
     // PURCHASES
     const PURCHASE      = "Purchase";
 
+    // PURCHASES
+    const PURCHASES     = "purchases";
+
     /**
      * Parse string into enums
      * @param string $transaction
